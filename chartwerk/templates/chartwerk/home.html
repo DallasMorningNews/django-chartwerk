@@ -1,0 +1,39 @@
+{%extends 'chartwerk/base.html'%}
+{%load staticfiles%}
+
+{%block custom_head%}
+<link rel="icon" href="{% static 'chartwerk/img/favicon.ico'%}" type="image/x-icon">
+<link rel="shortcut icon" href="{% static 'chartwerk/img/favicon.ico'%}" type="image/x-icon">
+<link rel="stylesheet" href="{% static 'chartwerk/css/home/styles.css' %}" media="screen" title="no title" charset="utf-8">
+{%endblock%}
+
+{%block content%}
+
+<div class="header">
+    <h1>
+        <a href="{%url 'chartwerk_home'%}">Chartwerk</a>
+        <span class="header-nav">
+            <a href="{%url 'chartwerk_start'%}">Start</a>
+            <a href="{%url 'chartwerk_browse'%}">Browse</a>
+            <a href="{%url 'chartwerk_mywerk'%}">MyWerk</a>
+        </span>
+    </h1>
+</div>
+
+
+
+<div class="center">
+
+
+	<h1>Make charts</h1>
+
+
+	<a href="{%url 'chartwerk_start'%}"><h2>Start a chart</h2></a>
+	<a href="{%url 'chartwerk_browse'%}"><h2>Browse charts</h2></a>
+	<a href="{%url 'chartwerk_mywerk'%}"><h2>MyWerk</h2></a>
+
+
+</div>
+
+
+{%endblock%}

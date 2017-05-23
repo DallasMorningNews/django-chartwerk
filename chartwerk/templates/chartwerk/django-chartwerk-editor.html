@@ -1,0 +1,55 @@
+{% extends "chartwerk/base.html" %}
+{%load static%}
+
+
+{%block custom_head%}
+<link rel="icon" href="{% static 'chartwerk/img/favicon.ico'%}" type="image/x-icon">
+<link rel="shortcut icon" href="{% static 'chartwerk/img/favicon.ico'%}" type="image/x-icon">
+<link rel="stylesheet" href="{% static 'chartwerk/css/vendor.css' %}" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="{% static 'chartwerk/css/app.css' %}" media="screen" title="no title" charset="utf-8">
+{%endblock%}
+
+{%block custom_js%}
+<script type="text/javascript">
+  window.chartwerkConfig = {
+    user: '{{user}}',
+    static_prefix: '/static/chartwerk/',
+    chart_api: '{{chart_api}}',
+    chart_id: '{{chart_id}}',
+    template_api: "{{template_api}}",
+    template_id: '{{template_id}}',
+    template_tags_api: '{{template_tags_api}}',
+    oembed: '{{oembed}}',
+    embed_src: '{{embed_src}}',
+  };
+</script>
+<script type="text/javascript" src="{% static 'chartwerk/js/vendor.js' %}"></script>
+<script type="text/javascript" src="{% static 'chartwerk/js/app.bundle.js' %}"></script>
+{%endblock%}
+
+{%block content%}
+
+<div class="header">
+    <h1>
+        <a href="{%url 'chartwerk_home'%}">Chartwerk</a>
+        <span class="header-nav">
+            <a href="{%url 'chartwerk_start'%}">Start</a>
+            <a href="{%url 'chartwerk_browse'%}">Browse</a>
+            <a href="{%url 'chartwerk_mywerk'%}">MyWerk</a>
+        </span>
+    </h1>
+</div>
+
+<div id="chartwerk-app" class="clearfix"></div>
+
+{%endblock%}
+
+{%block modals%}
+
+<div id="loading-modal">
+    <div class="loading-overlay"></div>
+    <div class="loading-text"><span>Loading</span><img src="{% static 'chartwerk/img/loader.gif' %}"></div>
+</div>
+
+{% include "chartwerk/partials/modals/data-preview.html" %}
+{%endblock%}

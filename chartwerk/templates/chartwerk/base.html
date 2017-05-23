@@ -1,0 +1,32 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        {%block title%}
+        <title>Chartwerk</title>
+        {%endblock%}
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+      <link rel="stylesheet" href="{% static 'chartwerk/css/vendor.css' %}" media="screen" title="no title" charset="utf-8">
+      <link rel="stylesheet" href="{% static 'chartwerk/css/shared/styles.css' %}" media="screen" title="no title" charset="utf-8">
+    	{%block custom_head%}
+      {%endblock%}
+
+    </head>
+    <body>
+
+
+
+    	{%block content%}{%endblock%}
+
+      {%block modals%}
+      {%endblock%}
+
+      {%block custom_js%}
+      {%endblock%}
+    </body>
+</html>

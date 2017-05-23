@@ -1,0 +1,89 @@
+{%extends 'chartwerk/base.html'%}
+{%load staticfiles%}
+{% load humanize %}
+{% load tags %}
+
+{%block custom_head%}
+<link rel="icon" href="{% static 'chartwerk/img/favicon.ico'%}" type="image/x-icon">
+<link rel="shortcut icon" href="{% static 'chartwerk/img/favicon.ico'%}" type="image/x-icon">
+<link rel="stylesheet" href="{% static 'chartwerk/css/start/styles.css' %}" media="screen" title="no title" charset="utf-8">
+{%endblock%}
+
+{%block custom_js%}
+<script type="text/javascript" src="{% static 'chartwerk/js/main-templates.bundle.js'%}"></script>
+{%endblock%}
+
+{%block content%}
+
+<div class="header">
+    <h1>
+        <a href="{%url 'chartwerk_home'%}">Chartwerk</a>
+        <span class="header-nav">
+            <a href="{%url 'chartwerk_start'%}">Start</a>
+            <a href="{%url 'chartwerk_browse'%}">Browse</a>
+            <a href="{%url 'chartwerk_mywerk'%}">MyWerk</a>
+        </span>
+    </h1>
+</div>
+
+
+
+<div class="center">
+<h1>Templates</h1>
+<div id="items">
+  <input class="search" placeholder="Find a template" />
+  <div>
+    <button class="sort" data-sort="count">
+      Popularity
+    </button>
+    <button class="sort" data-sort="title">
+      Title
+    </button>
+  </div>
+
+<ul class="list">
+{% for template in templates %}
+<li>
+  <div class="clearfix">
+    <div class="icon">
+      {% if template.icon %}
+      <img src="{{template.icon.url}}" />
+      {% else %}
+      <img src="{% static 'chartwerk/img/chartwerk_100.png'%}" />
+      {% endif %}
+    </div>
+    <div class="info">
+      <h3>
+        <a href="{%url 'chartwerk_template' template.slug%}" class="title">
+          {{template.title}}
+        </a>
+      </h3>
+      <p><span class="count">{{template.chart_count|intcomma}}</span> charts built</p>
+      <p class="credit">
+        Last updated by <span class="author">{{template.author|user_by_email}}</span> on <span>{{template.updated|date:"M. d, Y"}}</span>
+      </p>
+      <i
+        class="fa fa-info"
+        title="More info"
+        aria-hidden="true"
+        data-content="{{template.description}}"
+        data-title="{{template.title}}"
+      ></i>
+    </div>
+  </div>
+</li>
+{%endfor%}
+</ul>
+</div>
+
+</div>
+
+<div id="infobox">
+  <div>
+    <i class="fa fa-times"></i>
+    <div class="logo">Chartwerk</div>
+    <div class="content"></div>
+  </div>
+</div>
+
+{%endblock%}

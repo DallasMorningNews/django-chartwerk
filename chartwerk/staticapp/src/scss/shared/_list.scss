@@ -1,0 +1,107 @@
+@import './colors';
+@import './fonts';
+
+#items{
+
+  input.search{
+    margin:10px 0;
+    width:100%;
+    font-size:28px;
+    color:$grey;
+    padding:10px 15px 2px 2px;
+    background-color: white;
+    border:0;
+    border-bottom:3px solid $grey;
+    box-shadow:none;
+    &:focus,&:active{
+      outline:none;
+    }
+
+  }
+
+  button{
+    border: 1px solid $lightgrey;
+    color: $disabledgrey;
+    background-color: $white;
+    transition: all .25s;
+    padding:2px 20px 2px 5px;
+    position:relative;
+    text-transform:uppercase;
+    font-weight: bold;
+    font-family: arial, sans-serif;
+    &:hover{
+      color:$grey;
+    }
+    &.asc,&.desc{
+      color: $grey;
+      box-shadow: $boxshadow;
+    }
+    &.asc::after, &.desc::after{
+      color:$red;
+      font-weight: bold;
+      position:absolute;
+      right:7px;
+      top:2px;
+      font-family: FontAwesome;
+      font-weight: normal;
+    }
+    &.desc::after{
+      content:'\f0d7';
+    }
+    &.asc::after{
+      content:'\f0d8';
+    }
+  }
+
+  ul{
+    margin-top: 30px;
+    list-style-position: outside;
+    list-style-type: none;
+    padding:0;
+    li{
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom:1px solid $shadowgrey;
+
+      div.icon{
+        width:100px;
+        display:inline-block;
+        float:left;
+        img{
+          width:100%;
+        }
+      }
+      div.info{
+        display:inline-block;
+        width:calc(100% - 100px);
+        float:left;
+        padding-left: 15px;
+        position:relative;
+        h3{
+          font-family:'Russo One', sans-serif;
+          margin:0 0 5px 0;
+        }
+        p{
+          margin:0 0 5px 0;
+          color:$grey;
+          // .count{
+          //   font-weight:bold;
+          //   font-size:16px;
+          //   color:white;
+          //   background-color:$red;
+          //   padding:0px 5px;
+          // }
+
+          &.credit{
+            color:$midgrey;
+            font-style: italic;
+            font-size: 12px;
+            span.author{
+              color:$grey;
+            }
+          }
+        }
+      }
+    }
+  }
+}

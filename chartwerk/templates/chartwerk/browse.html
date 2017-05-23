@@ -1,0 +1,85 @@
+{%extends 'chartwerk/base.html'%}
+{%load staticfiles%}
+{% load tags %}
+
+{%block custom_head%}
+<link rel="icon" href="{% static 'chartwerk/img/favicon.ico'%}" type="image/x-icon">
+<link rel="shortcut icon" href="{% static 'chartwerk/img/favicon.ico'%}" type="image/x-icon">
+<link rel="stylesheet" href="{% static 'chartwerk/css/browse/styles.css' %}" media="screen" title="no title" charset="utf-8">
+{%endblock%}
+
+{%block custom_js%}
+<script type="text/javascript" src="{% static 'chartwerk/js/main-browse.bundle.js'%}"></script>
+{%endblock%}
+
+
+{%block content%}
+
+<div class="header">
+    <h1>
+        <a href="{%url 'chartwerk_home'%}">Chartwerk</a>
+        <span class="header-nav">
+            <a href="{%url 'chartwerk_start'%}">Start</a>
+            <a href="{%url 'chartwerk_browse'%}">Browse</a>
+            <a href="{%url 'chartwerk_mywerk'%}">MyWerk</a>
+        </span>
+    </h1>
+</div>
+
+
+
+
+
+<div class="center">
+<h1>The Latest</h1>
+<div id="items">
+  <input class="search" placeholder="Find a chart" />
+  <div>
+    <button class="sort" data-sort="created">
+      Created
+    </button>
+    <button class="sort" data-sort="author">
+      Author
+    </button>
+    <button class="sort" data-sort="title">
+      Title
+    </button>
+    <button class="sort" data-sort="type">
+      Type
+    </button>
+  </div>
+
+<ul class="list">
+{% for chart in charts %}
+<li>
+  <div class="clearfix">
+    <div class="icon">
+      <img src="{{chart.data.template.title|get_icon}}" />
+    </div>
+    <div class="info">
+      <h3>
+        <a href="{%url 'chartwerk_chart' chart.slug%}" class="title">
+          {{chart.data.text.title}}
+        </a>
+      </h3>
+      <div class="created" hidden>{{chart.created|date:"c"}}</div>
+      <h4 class="type">{{chart.data.template.title}}</h4>
+      <p class="chart-text">
+        <span class="headline" data-text="{{chart.data.text.headline}}"></span>
+        ―
+        <span class="chatter" data-text="{{chart.data.text.chatter}}"></span>
+      </p>
+      <p class="credit">Created by <span class="author">{{chart.creator}}</span> on {{chart.created|date:"M. d, Y"}}</p>
+    </div>
+  </div>
+</li>
+{%endfor%}
+</ul>
+<ul class="pagination"></ul>
+</div>
+
+</div>
+
+
+
+{%endblock%}

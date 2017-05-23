@@ -1,0 +1,43 @@
+.header{
+	font-family: 'kraftwerk';
+	background-color: $red;
+	box-shadow: $boxshadowthin;
+	position:relative;
+
+	color: white;
+	padding: 10px 15px 2px;
+
+    img{
+    	width: 130px;
+      	margin-bottom: -5px;
+    }
+
+    h1{
+    	font-size: 36px;
+    	margin: 0px;
+    	letter-spacing: 1.0px;
+
+        a{
+        	color:white;
+            &:hover{
+                color:white;
+            	text-decoration: none;
+            }
+        }
+
+        .header-nav{
+            font-family: 'Russo One', sans-serif;
+          	letter-spacing: 0px;
+          	font-size: 20px;
+
+            a{
+                opacity:.45;
+                transition:all .2s;
+                &:hover{
+                    opacity:.85;
+                }
+            }
+        }
+    }
+
+}

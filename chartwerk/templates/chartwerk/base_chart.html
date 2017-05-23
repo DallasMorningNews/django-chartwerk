@@ -1,0 +1,57 @@
+{% load tags %}
+<!DOCTYPE html>
+<html>
+<head>
+{% spaceless %}
+  <meta charset="UTF-8">
+  <title>Chartwerk {{werk.slug}}</title>
+
+  <!-- CSS reset -->
+  <style>
+{{werk.client.reset|safe}}
+  </style>
+
+  <!-- Dependency styles -->
+  {%for style in werk.dependencies.styles%}
+    {%if style.inject%}
+<style>{{style.script|safe}}</style>
+    {%else%}
+<link rel="stylesheet" type="text/css" href="{{style.url}}" />
+    {%endif%}
+  {%endfor%}
+
+  <!-- Client rendering styles (legends, annotations) -->
+  <style>{{werk.client.styles|safe}}</style>
+
+  <!-- Chart styles -->
+  <style>{{werk.scripts.styles|safe}}</style>
+
+  <script type="text/javascript" src="{{werk.client.jquery}}"></script>
+{% endspaceless %}
+</head>
+<body>
+{% spaceless %}
+  <div id="chartwerk">
+    {{werk.scripts.html|safe}}
+  </div>
+
+  <!-- Dependency scripts -->
+  {%for script in werk.dependencies.scripts%}
+<script type="text/javascript" src="{{script.url}}"></script>
+  {%endfor%}
+
+  <script type="text/javascript">
+{% autoescape off %}
+// Werk object
+var chartwerk = {{werk.data|jsonify}};
+// Helper script
+{{werk.scripts.helper}}
+// Draw script
+{{werk.scripts.draw}}
+// Renderer
+{{werk.client.scripts}}
+{% endautoescape %}
+  </script>
+{% endspaceless %}
+</body>
+</html>
