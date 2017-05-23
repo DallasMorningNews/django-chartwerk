@@ -1,5 +1,5 @@
 import json
-import os
+from importlib import import_module
 from urllib.parse import urlparse
 
 from chartwerk.models import Chart, FinderQuestion, Template, TemplateProperty
@@ -17,10 +17,38 @@ from django.views.generic import DetailView, ListView, TemplateView
 from rest_framework import viewsets
 
 
+def import_auth(val):
+    """Attempt to import a class from a string representation.
+
+    Pattern borrowed from Django REST Framework.
+    See rest_framework/settings.py#L170-L182
+    """
+    try:
+        parts = val.split('.')
+        module_path, class_name = '.'.join(parts[:-1]), parts[-1]
+        module = import_module(module_path)
+        return getattr(module, class_name)
+    except (ImportError, AttributeError) as e:
+        msg = "Could not import auth decorator '{}'. {}: {}.".format(
+            val,
+            e.__class__.__name__,
+            e)
+        raise ImportError(msg)
+
+
 def secure(view):
+    """Set an auth decorator applied for views.
+
+    If DEBUG is on, we serve the view without authenticating.
+
+    Default is 'django.contrib.auth.decorators.login_required'.
+    Can also be 'django.contrib.admin.views.decorators.staff_member_required'
+    or a custom decorator.
+    """
+    auth_decorator = import_auth(settings.CHARTWERK_AUTH_DECORATOR)
     return (
         view if settings.DEBUG
-        else method_decorator(login_required, name='dispatch')(view)
+        else method_decorator(auth_decorator, name='dispatch')(view)
     )
 
 
@@ -28,15 +56,15 @@ def build_context(context, request, chart_id='', template_id=''):
     """Build context object to pass to the chartwerk editor."""
     def urlize(url):
         return 'http://{}{}'.format(request.get_host(), url)
-    context['user'] = request.user.username or 'Anonymous'
+    context['user'] = request.user.username or 'DEBUGGER'
     context['chart_id'] = chart_id
     context['template_id'] = template_id
     context['chart_api'] = urlize('/api/charts/')
     context['template_api'] = urlize('/api/templates/')
     context['template_tags_api'] = urlize('/api/template-property/')
     context['oembed'] = urlize('/api/oembed/') \
-        if os.environ.get('CHARTWERK_OEMBED', False) else ''
-    context['embed_src'] = os.environ.get('CHARTWERK_EMBED_SCRIPT', '')
+        if settings.CHARTWERK_OEMBED else ''
+    context['embed_src'] = settings.CHARTWERK_EMBED_SCRIPT
     return context
 
 
@@ -66,12 +94,12 @@ class MyWerk(ListView):
     queryset = Chart.objects.all().order_by('-pk')
 
     def get_queryset(self):
-        user = self.request.user.username or 'Anonymous'
+        user = self.request.user.username or 'DEBUGGER'
         return Chart.objects.filter(creator=user)
 
     def get_context_data(self, **kwargs):
         context = super(MyWerk, self).get_context_data(**kwargs)
-        context['user'] = self.request.user or 'Anonymous'
+        context['user'] = self.request.user or 'DEBUGGER'
         return context
 
 
@@ -157,7 +185,7 @@ def oEmbed(request):
         "version": "1.0",
         "url": url,
         "title": chart.title,
-        "provider_url": os.environ.get("CHARTWERK_DOMAIN"),
+        "provider_url": settings.CHARTWERK_DOMAIN,
         "provider_name": "Chartwerk",
         "author_name": chart.creator,
         "chart_id": chart.slug,
@@ -178,7 +206,7 @@ def oEmbed(request):
             chart.slug,
             json.dumps(chart.embed_data).replace('"', '&quot;'),
             size,
-            os.environ.get('CHARTWERK_EMBED_SCRIPT'),
+            settings.CHARTWERK_EMBED_SCRIPT,
         )
     }
     return JsonResponse(oembed)

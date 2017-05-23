@@ -6,16 +6,17 @@ import time
 from slacker import Slacker
 
 from celery import shared_task
-from chartwerk.models import Template
+from chartwerk.models import Chartwerk, Template
+from django.conf import settings
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
 logger = logging.getLogger(__name__)
 
-DOMAIN = os.environ.get('CHARTWERK_DOMAIN')
+DOMAIN = settings.CHARTWERK_DOMAIN
 
 slack = False
 if 'CHARTWERK_SLACK_TOKEN' in os.environ:
-    slack = Slacker(os.environ.get('CHARTWERK_SLACK_TOKEN'))
+    slack = Slacker(os.getenv('CHARTWERK_SLACK_TOKEN'))
 
 
 def get_template_icon(template_title):
@@ -40,26 +41,27 @@ def get_slack_user(email):
 
 
 @shared_task
-def notify_slack(instance):
+def notify_slack(pk):
     """Send slack notification."""
+    werk = Chartwerk.objects.get(pk=pk)
     try:
         if slack:
-            chart_url = os.path.join(DOMAIN, 'chart', instance.slug)
+            chart_url = os.path.join(DOMAIN, 'chart', werk.slug)
             attachmentData = [{
                 'fallback': '{} created a new chart, "{}" at {}/'.format(
-                    get_slack_user(instance.author),
-                    instance.title,
+                    get_slack_user(werk.author),
+                    werk.title,
                     chart_url
                 ),
                 'color': '#C91507',
                 'pretext': 'New chart by {}'.format(
-                    get_slack_user(instance.author)
+                    get_slack_user(werk.author)
                 ),
-                'title': instance.title,
+                'title': werk.title,
                 'title_link': '{}/'.format(chart_url),
-                'text': instance.data['template']['title'],
+                'text': werk.data['template']['title'],
                 'thumb_url': get_template_icon(
-                    instance.data['template']['title']
+                    werk.data['template']['title']
                 ),
                 'footer': 'chartwerk',
                 'footer_icon': os.path.join(
@@ -69,7 +71,7 @@ def notify_slack(instance):
                 'ts': int(time.time())
             }]
             slack.chat.post_message(
-                os.environ.get('CHARTWERK_SLACK_CHANNEL', '#chartwerk'),
+                settings.CHARTWERK_SLACK_CHANNEL,
                 '',
                 as_user=True,
                 attachments=attachmentData

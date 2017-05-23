@@ -3,10 +3,11 @@ import os
 
 from chartwerk.models import Template
 from django import template
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
-DOMAIN = os.environ.get('CHARTWERK_DOMAIN')
+DOMAIN = settings.CHARTWERK_DOMAIN
 
 register = template.Library()
 
@@ -19,7 +20,7 @@ def jsonify(value):
 @register.filter
 def user_by_email(email):
     if email is None:
-        return 'Anonymous'
+        return 'DEBUGGER'
     user = User.objects.filter(email=email).first()
     if user:
         if user.first_name != '' and user.last_name != '':

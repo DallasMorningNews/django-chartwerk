@@ -5,23 +5,25 @@ from urllib.request import urlopen
 
 import boto3
 from celery import shared_task
+from chartwerk.models import Chartwerk
+from django.conf import settings
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.template.loader import render_to_string
 
 logger = logging.getLogger(__name__)
 
-DOMAIN = os.environ.get('CHARTWERK_DOMAIN')
-CACHE_HEADER = os.environ.get('CHARTWERK_CACHE_HEADER', str('max-age=300'))
+DOMAIN = settings.CHARTWERK_DOMAIN
+CACHE_HEADER = settings.CHARTWERK_CACHE_HEADER
 
 bucket = False
 if 'CHARTWERK_AWS_BUCKET' in os.environ:
     session = boto3.session.Session(
         region_name='us-east-1',
-        aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-        aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
     )
     s3 = session.resource('s3')
-    bucket = s3.Bucket(os.environ.get('CHARTWERK_AWS_BUCKET'))
+    bucket = s3.Bucket(settings.CHARTWERK_AWS_BUCKET)
 
 
 def render_local_static(static_file):
@@ -82,16 +84,17 @@ def cleaner(werk):
 
 
 @shared_task
-def write_to_aws(werk):
+def write_to_aws(pk):
     """Write to AWS S3 bucket.
 
     Creates dependency file context for injection, renders template as string
     and ships baked charts to AWS.
     """
+    werk = Chartwerk.objects.get(pk=pk)
     if bucket:
         try:
             werk.client = {
-                'jquery': 'https://code.jquery.com/jquery-3.2.1.slim.min.js',
+                'jquery': settings.CHARTWERK_JQUERY,
                 'scripts': render_local_static(
                     'chartwerk/js/client.bundle.js'),
                 'styles': render_local_static('chartwerk/css/client.css'),

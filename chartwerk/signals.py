@@ -20,8 +20,8 @@ def post_chart(sender, instance, **kwargs):
         instance.slug = uuid
         instance.creator = instance.author
         instance.save()
-        slack.delay(instance)
-    aws.delay(instance)
+        slack.delay(instance.pk)
+    aws.delay(instance.pk)
 
 
 @receiver(post_save, sender=Template)
@@ -35,4 +35,4 @@ def post_template(sender, instance, **kwargs):
         instance.slug = slug
         instance.creator = instance.author
         instance.save()
-    github.delay(instance)
+    github.delay(instance.pk)

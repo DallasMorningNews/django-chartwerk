@@ -4,6 +4,8 @@ import logging
 import os
 
 from celery import shared_task
+from chartwerk.models import Template
+from django.conf import settings
 from github import Github
 
 logger = logging.getLogger(__name__)
@@ -12,17 +14,14 @@ repository = False
 if 'CHARTWERK_GITHUB_USER' in os.environ and \
         'CHARTWERK_GITHUB_PASSWORD' in os.environ:
     try:
-        repo_name = os.environ.get(
-            'CHARTWERK_GITHUB_REPO',
-            'chartwerk-chart-templates'
-        )
+        repo_name = settings.CHARTWERK_GITHUB_REPO
         g = Github(
-            os.environ.get('CHARTWERK_GITHUB_USER'),
-            os.environ.get('CHARTWERK_GITHUB_PASSWORD')
+            os.getenv('CHARTWERK_GITHUB_USER'),
+            os.getenv('CHARTWERK_GITHUB_PASSWORD')
         )
         user = g.get_user()
-        if 'CHARTWERK_GITHUB_ORG' in os.environ:
-            user = g.get_organization(os.environ.get('CHARTWERK_GITHUB_ORG'))
+        if settings.CHARTWERK_GITHUB_ORG:
+            user = g.get_organization(settings.CHARTWERK_GITHUB_ORG)
         try:
             repository = user.get_repo(repo_name)
         except:
@@ -55,26 +54,27 @@ def commit_script(path, script):
 
 
 @shared_task
-def commit_template(instance):
+def commit_template(pk):
+    template = Template.objects.get(pk=pk)
     """Commit template scripts to github."""
     if repository:
         commit_script(
-            '/{}/draw.js'.format(instance.slug),
-            instance.data['scripts']['draw']
+            '/{}/draw.js'.format(template.slug),
+            template.data['scripts']['draw']
         )
         commit_script(
-            '/{}/helper.js'.format(instance.slug),
-            instance.data['scripts']['helper']
+            '/{}/helper.js'.format(template.slug),
+            template.data['scripts']['helper']
         )
         commit_script(
-            '/{}/chart.html'.format(instance.slug),
-            instance.data['scripts']['html']
+            '/{}/chart.html'.format(template.slug),
+            template.data['scripts']['html']
         )
         commit_script(
-            '/{}/styles.css'.format(instance.slug),
-            instance.data['scripts']['styles']
+            '/{}/styles.css'.format(template.slug),
+            template.data['scripts']['styles']
         )
         commit_script(
-            '/{}/template.json'.format(instance.slug),
-            json.dumps(instance.data)
+            '/{}/template.json'.format(template.slug),
+            json.dumps(template.data)
         )
