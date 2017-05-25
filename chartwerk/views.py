@@ -1,4 +1,5 @@
 import json
+import os
 from importlib import import_module
 from urllib.parse import urlparse
 
@@ -8,13 +9,14 @@ from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
                                    TemplatePropertySerializer,
                                    TemplateSerializer)
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import resolve
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 def import_auth(val):
@@ -54,15 +56,16 @@ def secure(view):
 
 def build_context(context, request, chart_id='', template_id=''):
     """Build context object to pass to the chartwerk editor."""
-    def urlize(url):
-        return 'http://{}{}'.format(request.get_host(), url)
+    def urlize(path):
+        uri = os.path.join(reverse('chartwerk_home'), path)
+        return '//{}{}'.format(request.get_host(), uri)
     context['user'] = request.user.username or 'DEBUGGER'
     context['chart_id'] = chart_id
     context['template_id'] = template_id
-    context['chart_api'] = urlize('/api/charts/')
-    context['template_api'] = urlize('/api/templates/')
-    context['template_tags_api'] = urlize('/api/template-property/')
-    context['oembed'] = urlize('/api/oembed/') \
+    context['chart_api'] = urlize('api/charts/')
+    context['template_api'] = urlize('api/templates/')
+    context['template_tags_api'] = urlize('api/template-property/')
+    context['oembed'] = urlize('api/oembed/') \
         if settings.CHARTWERK_OEMBED else ''
     context['embed_src'] = settings.CHARTWERK_EMBED_SCRIPT
     return context
@@ -142,29 +145,34 @@ class JSONResponseMixin(object):
 
 
 class ChartViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = Chart.objects.all()
     serializer_class = ChartSerializer
     lookup_field = 'slug'
 
 
 class TemplateViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
     lookup_field = 'slug'
 
 
 class TemplatePropertyViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = None
     queryset = TemplateProperty.objects.all()
     serializer_class = TemplatePropertySerializer
 
 
 class FinderQuestionViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = FinderQuestion.objects.all()
     serializer_class = FinderQuestionSerializer
 
 
 class ChartEmbedViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = Chart.objects.all()
     serializer_class = ChartEmbedSerializer
     lookup_field = 'slug'

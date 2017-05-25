@@ -2,6 +2,7 @@ include LICENSE
 include README.md
 recursive-include chartwerk/static *
 recursive-include chartwerk/templates *
+recursive-include chartwerk/fixtures *
 recursive-include chartwerk/staticapp/src *
 recursive-include chartwerk/staticapp/gulp *
 include chartwerk/staticapp/.eslintrc

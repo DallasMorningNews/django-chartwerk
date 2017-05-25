@@ -1,80 +1,149 @@
+![POLITICO](https://rawgithub.com/The-Politico/src/master/images/logo/badge.png)
+
 # django-chartwerk
 
+## Installation
 
-## Configuration options
+1. Install `django-chartwerk`.
 
-Chartwerk allows you to set a number of configuration options. The preferred method of setting config is through environment variables, though most config options can also be set in your project settings using the same variable name. For those options that can be set in `settings.py`, environment variables still override your variables in your project settings.
+    ```bash
+    $ pip install django-chartwerk
+    ```
 
-#### `CHARTWERK_DOMAIN`
+2. Add AWS credentials to environment variables.
 
-The domain of the app running Chartwerk. For example, your app may be hosted at `http://myapp.mydomain.com`. **Required.**
+    ```bash
+    # .env
+    export AWS_ACCESS_KEY_ID=xxxyyyzzz
+    export AWS_SECRET_ACCESS_KEY=aaabbbcccddd
+    ```
 
+3. Add chartwerk's dependencies and the minimum configuration variables.
 
-#### `CHARTWERK_EMBED_SCRIPT`
+    ```python
+    # project/settings.py
 
-URL to your custom script for embedding Chartwerk charts in your CMS. **Required.**
+    INSTALLED_APPS = [
+        # ...
+        'django.contrib.humanize',
+        'rest_framework',
+        'django_filters',
+        'chartwerk',
+    ]
 
-#### `CHARTWERK_AUTH_DECORATOR`
+    CHARTWERK_DOMAIN = 'https://yourapp.com'
+    CHARTWERK_EMBED_SCRIPT = 'https://yourapp.com/static/wherever/js/embed_v1.js'
+    CHARTWERK_AWS_BUCKET = 'chartwerk'
+    ```
+4. Add chartwerk to your project's `urls.py`.
 
-String module path to a decorator that should be applied to Chartwerk views to authentication users. Defaults to `django.contrib.auth.decorators.login_required`, but can also be `django.contrib.admin.views.decorators.staff_member_required`, for example.
+    ```python
+    # project/urls.py
 
+    urlpatterns = [
+        # ...
+        url(r'^chartwerk/', include('chartwerk.urls')),
+    ]
+    ```
 
-#### `CHARTWERK_OEMBED`
+5. Chartwerk uses [Celery](http://docs.celeryproject.org/en/latest/getting-started/introduction.html) to process some tasks asynchronously. Read [First steps with Django](http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html) to see how to setup a Celery app in your project. Here is a configuration you can also use to start:
 
-If your CMS is configured to use oEmbed, set this setting to `True` which will return oEmbed code to users in the editor. Default is `False`.
+    ```python
+    # project/celery.py
 
-#### `CHARTWERK_DB`
+    import os
 
-If you aren't using PostgreSQL in your main project, you can separate the database for this app from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `chartwerk`.
+    from celery import Celery
+    from django.conf import settings
 
-#### `CHARTWERK_JQUERY`
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', '<your project>.settings')
 
-URL to jQuery version you want to include in baked-out charts. Defaults to `https://code.jquery.com/jquery-3.2.1.slim.min.js`.
+    app = Celery('chartwerk')
+    app.config_from_object('django.conf:settings', namespace='CELERY')
+    app.conf.update(
+        task_serializer='json'
+    )
+    # Use synchronous tasks in local dev
+    if settings.DEBUG:
+        app.conf.update(task_always_eager=True)
+    app.autodiscover_tasks(lambda: settings.INSTALLED_APPS, related_name='celery')
+    ```
 
+    ```python
+    # project/__init__.py
+    from .celery import app as celery_app
 
-#### `AWS_ACCESS_KEY_ID`
+    __all__ = ['celery_app']
+    ```
+
+## Configuration variables
+
+Chartwerk allows you to set a number of configuration options. The preferred method of setting config is through environment variables, though most config options can also be set in your project settings using the same variable name. For those options that can be set in `settings.py`, environment variables override variables in your project settings if you declare them in both places.
+
+##### `AWS_ACCESS_KEY_ID`
 
 AWS access key ID. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables). **Required as environment variable**
 
-
-#### `AWS_SECRET_ACCESS_KEY`
+##### `AWS_SECRET_ACCESS_KEY`
 
 AWS secret access key. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables). **Required as environment variable.**
 
-#### `CHARTWERK_AWS_BUCKET`
+##### `CHARTWERK_DOMAIN`
+
+The domain of the app running Chartwerk. For example, your app may be hosted at `http://myapp.mydomain.com`. **Required.**
+
+##### `CHARTWERK_EMBED_SCRIPT`
+
+Absolute URL to your custom script for embedding Chartwerk charts in your CMS. **Required.**
+
+##### `CHARTWERK_AWS_BUCKET`
 
 AWS S3 bucket name to publish charts to. **Required.**
 
-#### `CHARTWERK_AWS_PATH`
+##### `CHARTWERK_AUTH_DECORATOR`
+
+String module path to a decorator that should be applied to Chartwerk views to authentication users. Defaults to `django.contrib.auth.decorators.login_required`, but can also be `django.contrib.admin.views.decorators.staff_member_required`, for example.
+
+##### `CHARTWERK_OEMBED`
+
+If your CMS is configured to use oEmbed, set this setting to `True` which will return oEmbed code to users in the editor. Default is `False`.
+
+##### `CHARTWERK_DB`
+
+If you aren't using PostgreSQL in your main project, you can separate the database for this app from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `chartwerk`.
+
+##### `CHARTWERK_JQUERY`
+
+URL to jQuery version you want to include in baked-out charts. Defaults to `https://code.jquery.com/jquery-3.2.1.slim.min.js`.
+
+##### `CHARTWERK_AWS_PATH`
 
 Path within your S3 bucket to append to object keys before publishing. Defaults to `charts`
 
-#### `CHARTWERK_CACHE_HEADER`
+##### `CHARTWERK_CACHE_HEADER`
 
 Cache header to add to chart files when published to S3. Defaults to `max-age=300`.
 
-
-#### `CHARTWERK_GITHUB_USER`
+##### `CHARTWERK_GITHUB_USER`
 
 Chartwerk can commit your chart templates to a GitHub repository for safe keeping. To do so, add a GitHub username. Can only be set as an environment variable.
 
-#### `CHARTWERK_GITHUB_PASSWORD`
+##### `CHARTWERK_GITHUB_PASSWORD`
 
 GitHub password. Can only be set as an environment variable.
 
-#### `CHARTWERK_GITHUB_REPO`
+##### `CHARTWERK_GITHUB_REPO`
 
 The name of the repo to save chart templates to. Defaults to `chartwerk_chart-templates`.
 
-####  `CHARTWERK_GITHUB_ORG`
+#####  `CHARTWERK_GITHUB_ORG`
 
 To keep templates in a repo under a GitHub organization, set this variable to the GitHub org name.
 
-
-#### `CHARTWERK_SLACK_TOKEN`
+##### `CHARTWERK_SLACK_TOKEN`
 
 Chartwerk can send notifications to a Slack channel whenever a new chart is created. Add a Slack API token here.
 
-#### `CHARTWERK_SLACK_CHANNEL`
+##### `CHARTWERK_SLACK_CHANNEL`
 
 Name of the Slack channel to post notifications to. Defaults to `#chartwerk`.

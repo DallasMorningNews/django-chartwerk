@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-chartwerk',
-    version='0.1',
+    version='0.0.1',
     packages=find_packages(),
     include_package_data=True,
     license='BSD License',
@@ -38,7 +38,10 @@ setup(
         'celery>=4.0.0',
         'dj-database-url>=0.3.0',
         'Django>=1.9',
+        'django-filter>=1.0.4',
+        'django-uuslug>=1.1.8',
         'djangorestframework>=2.4.4',
+        'Pillow>=4.1.1',
         'psycopg2>=2.6.1',
         'PyGithub>=1.29',
         'slacker>=0.9.25',
