@@ -86,6 +86,29 @@
     __all__ = ['celery_app']
     ```
 
+6. Make sure you have django-chartwerk connected to a PostgreSQL database. For example using [dj_database_url](https://github.com/kennethreitz/dj-database-url):
+
+    ```bash
+    # .env
+    export DATABASE_URL=postgresql://user:password@127.0.0.1:5432/database
+    ```
+
+    ```python
+    # project/settings.py
+    import dj_database_url
+
+    DATABASES = {
+        'default': dj_database_url.config()
+    }
+    ```
+
+7. Run migrations, start the dev server and enjoy!
+
+    ```bash
+    $ python manage.py migrate
+    $ python manage.py runserver
+    ```
+
 ## Configuration variables
 
 Chartwerk allows you to set a number of configuration options. The preferred method of setting config is through environment variables, though most config options can also be set in your project settings using the same variable name. For those options that can be set in `settings.py`, environment variables override variables in your project settings if you declare them in both places.
