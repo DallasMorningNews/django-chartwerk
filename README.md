@@ -2,6 +2,13 @@
 
 # django-chartwerk
 
+## Assumptions
+
+1. django-chartwerk requires Django's [JSONField](https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield) field. Therefore, PostgreSQL is required. You can, however, separate django-chartwerk's database from others in your project easily by specifying CHARTWERK_DB environment variable.
+
+2. django-chartwerk is written to bake charts to Amazon Web Service's Simple Storage Service (S3). We assume that's your plan, too.
+
+
 ## Installation
 
 1. Install `django-chartwerk`.
@@ -87,11 +94,11 @@ Chartwerk allows you to set a number of configuration options. The preferred met
 
 `CHARTWERK_AUTH_DECORATOR`
 
-String module path to a decorator that should be applied to Chartwerk views to authentication users. Defaults to `"django.contrib.auth.decorators.login_required"`, but can also be `"django.contrib.admin.views.decorators.staff_member_required"`, for example.
+String module path to a decorator that should be applied to Chartwerk views to authenticate users. Defaults to `"django.contrib.auth.decorators.login_required"`, but can also be `"django.contrib.admin.views.decorators.staff_member_required"`, for example. (This decorator is not applied to views in DEBUG mode.)
 
 `CHARTWERK_DB`
 
-If you aren't using PostgreSQL in your main project, you can separate the database for this app from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`.
+If you aren't using PostgreSQL in your main project, you can separate the database for django-chartwerk from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`.
 
 ### AWS Publishing
 
