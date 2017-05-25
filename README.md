@@ -87,11 +87,11 @@ Chartwerk allows you to set a number of configuration options. The preferred met
 
 `CHARTWERK_AUTH_DECORATOR`
 
-String module path to a decorator that should be applied to Chartwerk views to authentication users. Defaults to `django.contrib.auth.decorators.login_required`, but can also be `django.contrib.admin.views.decorators.staff_member_required`, for example.
+String module path to a decorator that should be applied to Chartwerk views to authentication users. Defaults to `"django.contrib.auth.decorators.login_required"`, but can also be `"django.contrib.admin.views.decorators.staff_member_required"`, for example.
 
 `CHARTWERK_DB`
 
-If you aren't using PostgreSQL in your main project, you can separate the database for this app from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `chartwerk`.
+If you aren't using PostgreSQL in your main project, you can separate the database for this app from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`.
 
 ### AWS Publishing
 
@@ -109,15 +109,15 @@ AWS S3 bucket name to publish charts to. **Required.**
 
 `CHARTWERK_AWS_PATH`
 
-Path within your S3 bucket to append to object keys before publishing. Defaults to `charts`
+Path within your S3 bucket to append to object keys before publishing. Defaults to `"charts"`
 
 `CHARTWERK_CACHE_HEADER`
 
-Cache header to add to chart files when published to S3. Defaults to `max-age=300`.
+Cache header to add to chart files when published to S3. Defaults to `"max-age=300"`.
 
 `CHARTWERK_DOMAIN`
 
-The domain of the app running Chartwerk. For example, your app may be hosted at `http://myapp.mydomain.com`. **Required.**
+The domain of the app running Chartwerk. For example, your app may be hosted at `"http://myapp.mydomain.com"`. **Required.**
 
 `CHARTWERK_EMBED_SCRIPT`
 
@@ -125,7 +125,7 @@ Absolute URL to your custom script for embedding Chartwerk charts in your CMS. *
 
 `CHARTWERK_JQUERY`
 
-URL to jQuery version you want to include in baked-out charts. Defaults to `https://code.jquery.com/jquery-3.2.1.slim.min.js`.
+URL to jQuery version you want to include in baked-out charts. Defaults to `"https://code.jquery.com/jquery-3.2.1.slim.min.js"`.
 
 
 `CHARTWERK_OEMBED`
@@ -135,7 +135,7 @@ If your CMS is configured to use oEmbed, set this setting to `True` which will r
 
 ### Github
 
-Chartwerk can commit your chart templates to a GitHub repository for safe keeping.
+django-chartwerk can commit your chart templates to a GitHub repository for safe keeping.
 
 `CHARTWERK_GITHUB_ORG`
 
@@ -147,7 +147,7 @@ GitHub user password. Can only be set as an environment variable.
 
 `CHARTWERK_GITHUB_REPO`
 
-The name of the repo to save chart templates to. Defaults to `chartwerk_chart-templates`.
+The name of the repo to save chart templates to. Defaults to `"chartwerk_chart-templates"`.
 
 `CHARTWERK_GITHUB_USER`
 
@@ -159,8 +159,8 @@ Chartwerk can send notifications to a Slack channel whenever a new chart is crea
 
 `CHARTWERK_SLACK_CHANNEL`
 
-Name of the Slack channel to post notifications to. Defaults to `#chartwerk`.
+Name of the Slack channel to post notifications to. Defaults to `"#chartwerk"`.
 
 `CHARTWERK_SLACK_TOKEN`
 
-Slack API token here.
+A Slack API token.
