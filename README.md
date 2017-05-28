@@ -1,10 +1,17 @@
 ![POLITICO](https://rawgithub.com/The-Politico/src/master/images/logo/badge.png)
 
-# django-chartwerk
+# ![chartwerk](docs/logo.png)
+
+
+A django-based application to manage, create and share Chartwerk charts, built with [django REST framework](http://www.django-rest-framework.org/).
+
+For the React/Redux-based chart editor, see [chartwerk-editor](https://github.com/DallasMorningNews/chartwerk-editor).
+
+
 
 ## Assumptions
 
-1. django-chartwerk requires Django's [JSONField](https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield) field. Therefore, PostgreSQL is required. You can, however, separate django-chartwerk's database from others in your project easily by specifying CHARTWERK_DB environment variable.
+1. django-chartwerk uses Django's [JSONField](https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield) field. Therefore, PostgreSQL is required. You can, however, separate django-chartwerk's database from others in your project easily by specifying a CHARTWERK_DB environment variable.
 
 2. django-chartwerk is written to bake charts to Amazon Web Service's Simple Storage Service (S3). We assume that's your plan, too.
 
@@ -115,50 +122,50 @@ Chartwerk allows you to set a number of configuration options. The preferred met
 
 ### App settings
 
-`CHARTWERK_AUTH_DECORATOR`
+- `CHARTWERK_AUTH_DECORATOR`
 
 String module path to a decorator that should be applied to Chartwerk views to authenticate users. Defaults to `"django.contrib.auth.decorators.login_required"`, but can also be `"django.contrib.admin.views.decorators.staff_member_required"`, for example. (This decorator is not applied to views in DEBUG mode.)
 
-`CHARTWERK_DB`
+- `CHARTWERK_DB`
 
 If you aren't using PostgreSQL in your main project, you can separate the database for django-chartwerk from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`.
 
 ### AWS Publishing
 
-`AWS_ACCESS_KEY_ID`
+- `AWS_ACCESS_KEY_ID`
 
 AWS access key ID. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables). **Required as environment variable**
 
-`AWS_SECRET_ACCESS_KEY`
+- `AWS_SECRET_ACCESS_KEY`
 
 AWS secret access key. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables). **Required as environment variable.**
 
-`CHARTWERK_AWS_BUCKET`
+- `CHARTWERK_AWS_BUCKET`
 
 AWS S3 bucket name to publish charts to. **Required.**
 
-`CHARTWERK_AWS_PATH`
+- `CHARTWERK_AWS_PATH`
 
 Path within your S3 bucket to append to object keys before publishing. Defaults to `"charts"`
 
-`CHARTWERK_CACHE_HEADER`
+- `CHARTWERK_CACHE_HEADER`
 
 Cache header to add to chart files when published to S3. Defaults to `"max-age=300"`.
 
-`CHARTWERK_DOMAIN`
+- `CHARTWERK_DOMAIN`
 
 The domain of the app running Chartwerk. For example, your app may be hosted at `"http://myapp.mydomain.com"`. **Required.**
 
-`CHARTWERK_EMBED_SCRIPT`
+- `CHARTWERK_EMBED_SCRIPT`
 
 Absolute URL to your custom script for embedding Chartwerk charts in your CMS. **Required.**
 
-`CHARTWERK_JQUERY`
+- `CHARTWERK_JQUERY`
 
 URL to jQuery version you want to include in baked-out charts. Defaults to `"https://code.jquery.com/jquery-3.2.1.slim.min.js"`.
 
 
-`CHARTWERK_OEMBED`
+- `CHARTWERK_OEMBED`
 
 If your CMS is configured to use oEmbed, set this setting to `True` which will return oEmbed code to users in the editor. Default is `False`.
 
@@ -167,19 +174,19 @@ If your CMS is configured to use oEmbed, set this setting to `True` which will r
 
 django-chartwerk can commit your chart templates to a GitHub repository for safe keeping.
 
-`CHARTWERK_GITHUB_ORG`
+- `CHARTWERK_GITHUB_ORG`
 
 To keep templates in a repo under a GitHub organization, set this variable to the GitHub org name.
 
-`CHARTWERK_GITHUB_PASSWORD`
+- `CHARTWERK_GITHUB_PASSWORD`
 
 GitHub user password. Can only be set as an environment variable.
 
-`CHARTWERK_GITHUB_REPO`
+- `CHARTWERK_GITHUB_REPO`
 
 The name of the repo to save chart templates to. Defaults to `"chartwerk_chart-templates"`.
 
-`CHARTWERK_GITHUB_USER`
+- `CHARTWERK_GITHUB_USER`
 
 GitHub username. Can only be set as an environment variable.
 
@@ -187,10 +194,10 @@ GitHub username. Can only be set as an environment variable.
 
 Chartwerk can send notifications to a Slack channel whenever a new chart is created.
 
-`CHARTWERK_SLACK_CHANNEL`
+- `CHARTWERK_SLACK_CHANNEL`
 
 Name of the Slack channel to post notifications to. Defaults to `"#chartwerk"`.
 
-`CHARTWERK_SLACK_TOKEN`
+- `CHARTWERK_SLACK_TOKEN`
 
 A Slack API token.
