@@ -85,6 +85,12 @@ settings.CHARTWERK_AUTH_DECORATOR = os.getenv(
         'django.contrib.auth.decorators.login_required'
     ))
 
+settings.CHARTWERK_COLOR_SCHEMES = getattr(
+    settings,
+    'CHARTWERK_COLOR_SCHEMES',
+    None
+)
+
 #####################
 # OPTIONAL SETTINGS #
 #####################
@@ -132,7 +138,6 @@ if settings.CHARTWERK_SLACK_CHANNEL:
         raise ChartwerkConfigError('You set the CHARTWERK_SLACK_CHANNEL \
 variable, but you haven\'t set the CHARTWERK_SLACK_TOKEN variable. \
 Set it as an environment variable.')
-
 
 #####################
 # DATABASE SETTINGS #

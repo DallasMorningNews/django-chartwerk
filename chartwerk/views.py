@@ -68,6 +68,7 @@ def build_context(context, request, chart_id='', template_id=''):
     context['oembed'] = urlize('api/oembed/') \
         if settings.CHARTWERK_OEMBED else ''
     context['embed_src'] = settings.CHARTWERK_EMBED_SCRIPT
+    context['color_schemes'] = settings.CHARTWERK_COLOR_SCHEMES
     return context
 
 
