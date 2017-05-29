@@ -88,7 +88,7 @@ settings.CHARTWERK_AUTH_DECORATOR = os.getenv(
 settings.CHARTWERK_COLOR_SCHEMES = getattr(
     settings,
     'CHARTWERK_COLOR_SCHEMES',
-    None
+    {}
 )
 
 #####################
