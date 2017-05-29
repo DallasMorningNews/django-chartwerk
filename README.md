@@ -130,6 +130,42 @@ String module path to a decorator that should be applied to Chartwerk views to a
 
 If you aren't using PostgreSQL in your main project, you can separate the database for django-chartwerk from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`.
 
+- `CHARTWERK_COLOR_SCHEMES`
+
+Set this variable in your project settings to declare a default set of color schemes your users can select for chart elements. The schemes must be organized by type as a dictionary with keys `categorical`, `sequential` and `diverging`. Name each color scheme and then provide a list of hexadecimal color codes. For example:
+
+```python
+# settings.py
+CHARTWERK_COLOR_SCHEMES = {
+    'categorical': {
+        'default': [
+            '#AAAAAA',
+            '#BBB'
+            # etc.
+        ],
+    }
+    'sequential': {
+        'reds': [
+            '#FF0000',
+            '#8B0000',
+            # etc.
+        ],
+        'blues': [
+            '#0000FF,
+            '#000080',
+            # etc.
+        ]
+    },
+    'diverging': {
+        'redBlue': [
+            '#FF0000',
+            '#0000FF',
+            # etc.
+        ]
+    }
+}
+```
+
 ### AWS Publishing
 
 - `AWS_ACCESS_KEY_ID`
