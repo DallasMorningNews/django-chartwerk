@@ -1,23 +1,28 @@
+# NOQA
+# Imports from standard libraries.
 import os
+from setuptools import find_packages
+from setuptools import setup
 
-from setuptools import find_packages, setup
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
 
+
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+
 
 setup(
     name='django-chartwerk',
-    version='0.0.1',
+    version='0.0.2',
     packages=find_packages(),
     include_package_data=True,
-    license='BSD License',
+    license='ISC',
     description='A Django integration of Chartwerk.',
     long_description=README,
-    url='https://github.com/The-Politico/django-chartwerk/',
-    author='Jon McClure',
-    author_email='jon.r.mcclure@gmail.com',
+    url='https://github.com/DallasMorningNews/django-chartwerk/',
+    author='Jon McClure and The Dallas Morning News',
+    author_email='jon.r.mcclure@gmail.com, newsapps@dallasnews.com',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
