@@ -1,7 +1,7 @@
 # ![chartwerk](docs/logo.png)
 
 
-A django-based application to manage, create and share Chartwerk charts, built with [django REST framework](http://www.django-rest-framework.org/).
+A Django-based application to manage, create and share Chartwerk charts, built with [Django REST framework](http://www.django-rest-framework.org/).
 
 For the React/Redux-based chart editor, see [chartwerk-editor](https://github.com/DallasMorningNews/chartwerk-editor).
 
