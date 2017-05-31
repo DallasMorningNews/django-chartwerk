@@ -6,6 +6,8 @@ from setuptools import setup
 
 REPO_URL = 'https://github.com/DallasMorningNews/django-chartwerk/'
 
+PYPI_VERSION = '0.0.3'
+
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
 
@@ -14,14 +16,20 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-chartwerk',
-    version='0.0.2',
+    version=PYPI_VERSION,
     packages=find_packages(),
     include_package_data=True,
     license='ISC',
-    description='A Django integration of Chartwerk.',
+    description=' '.join([
+        'A Django-based application to',
+        'manage, create and share Chartwerk charts.'
+    ]),
     long_description=README,
     url=REPO_URL,
-    download_url=REPO_URL + 'archive/0.0.2.tar.gz',
+    download_url='{repo_url}archive/{version}.tar.gz'.format({
+        'repo': REPO_URL,
+        'version': PYPI_VERSION
+    }),
     author='Jon McClure and The Dallas Morning News',
     author_email='jon.r.mcclure@gmail.com, newsapps@dallasnews.com',
     classifiers=[
