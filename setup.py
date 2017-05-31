@@ -1,13 +1,13 @@
-# NOQA
-# Imports from standard libraries.
+# Imports from standard libraries.  # NOQA
 import os
 from setuptools import find_packages
 from setuptools import setup
 
 
+REPO_URL = 'https://github.com/DallasMorningNews/django-chartwerk/'
+
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
-
 
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
@@ -20,7 +20,8 @@ setup(
     license='ISC',
     description='A Django integration of Chartwerk.',
     long_description=README,
-    url='https://github.com/DallasMorningNews/django-chartwerk/',
+    url=REPO_URL,
+    download_url=REPO_URL + 'archive/0.0.2.tar.gz',
     author='Jon McClure and The Dallas Morning News',
     author_email='jon.r.mcclure@gmail.com, newsapps@dallasnews.com',
     classifiers=[
