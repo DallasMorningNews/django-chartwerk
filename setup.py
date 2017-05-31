@@ -6,7 +6,7 @@ from setuptools import setup
 
 REPO_URL = 'https://github.com/DallasMorningNews/django-chartwerk/'
 
-PYPI_VERSION = '0.0.3'
+PYPI_VERSION = '0.0.4'
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
@@ -27,8 +27,8 @@ setup(
     long_description=README,
     url=REPO_URL,
     download_url='{repo_url}archive/{version}.tar.gz'.format({
-        'repo': REPO_URL,
-        'version': PYPI_VERSION
+        'repo_url': REPO_URL,
+        'version': PYPI_VERSION,
     }),
     author='Jon McClure and The Dallas Morning News',
     author_email='jon.r.mcclure@gmail.com, newsapps@dallasnews.com',
