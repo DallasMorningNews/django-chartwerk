@@ -26,7 +26,7 @@ setup(
     ]),
     long_description=README,
     url=REPO_URL,
-    download_url='{repo_url}archive/{version}.tar.gz'.format({
+    download_url='{repo_url}archive/{version}.tar.gz'.format(**{
         'repo_url': REPO_URL,
         'version': PYPI_VERSION,
     }),
