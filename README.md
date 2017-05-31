@@ -1,5 +1,10 @@
 # ![chartwerk](docs/logo.png)
 
+[![PyPI version](https://badge.fury.io/py/django-chartwerk.svg)](https://pypi.org/project/django-chartwerk/)
+[![PyPI](https://img.shields.io/pypi/status/django-chartwerk.svg)](https://pypi.org/project/django-chartwerk/)
+[![Requirements Status](https://img.shields.io/requires/github/DallasMorningNews/django-chartwerk.svg?maxAge=2592000)](https://requires.io/github/DallasMorningNews/django-chartwerk/requirements/?branch=master)
+[![CircleCI](https://img.shields.io/circleci/project/github/dallasmorningnews/django-chartwerk.svg)]()
+
 
 A Django-based application to manage, create and share Chartwerk charts, built with [Django REST framework](http://www.django-rest-framework.org/).
 
