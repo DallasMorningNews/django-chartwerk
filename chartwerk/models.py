@@ -79,8 +79,7 @@ class Template(Chartwerk):
     description = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = uuslug(self.title, instance=self)
+        self.slug = uuslug(self.title, instance=self)
         super(Template, self).save(*args, **kwargs)
 
     def __str__(self): # noqa
@@ -101,8 +100,7 @@ class TemplateProperty(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = uuslug(self.property, instance=self)
+        self.slug = uuslug(self.property, instance=self)
         super(TemplateProperty, self).save(*args, **kwargs)
 
     def __str__(self): # noqa
