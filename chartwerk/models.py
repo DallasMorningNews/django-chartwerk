@@ -53,16 +53,17 @@ class Chart(Chartwerk):
     embed_data = JSONField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        char_set = string.ascii_uppercase + \
-            string.ascii_lowercase + \
-            string.digits
-        uuid = ''.join(random.choice(char_set) for _ in range(8))
-        self.slug = uuslug(
-            uuid,
-            instance=self,
-            max_length=8,
-            separator=''
-        )
+        if not self.slug:
+            char_set = string.ascii_uppercase + \
+                string.ascii_lowercase + \
+                string.digits
+            uuid = ''.join(random.choice(char_set) for _ in range(8))
+            self.slug = uuslug(
+                uuid,
+                instance=self,
+                max_length=8,
+                separator=''
+            )
         super(Chart, self).save(*args, **kwargs)
 
     def __str__(self): # noqa
