@@ -38,7 +38,6 @@ setup(
         'celery>=4.0.0',
         'dj-database-url>=0.3.0',
         'Django>=1.9',
-        'django-filter>=1.0.4',
         'django-uuslug>=1.1.8',
         'djangorestframework>=2.4',
         'Pillow',
