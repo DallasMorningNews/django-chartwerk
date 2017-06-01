@@ -1,7 +1,7 @@
 """Celery task to bake charts to aws."""
+from __future__ import absolute_import
 import logging
 import os
-from urllib.request import urlopen
 
 import boto3
 from celery import shared_task
@@ -9,6 +9,7 @@ from chartwerk.models import Chartwerk
 from django.conf import settings
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.template.loader import render_to_string
+from django.utils.six.moves.urllib.request import urlopen
 
 logger = logging.getLogger(__name__)
 
