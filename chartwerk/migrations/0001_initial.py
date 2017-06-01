@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('author', models.CharField(blank=True, max_length=250, null=True)),
                 ('creator', models.CharField(blank=True, max_length=250, null=True)),
-                ('icon', models.ImageField(blank=True, null=True, upload_to=chartwerk.models.Template.icon_upload_path)),
+                ('icon', models.ImageField(blank=True, null=True)),
                 ('description', models.TextField(blank=True, null=True)),
             ],
             options={
