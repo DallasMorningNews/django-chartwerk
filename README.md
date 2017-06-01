@@ -39,7 +39,6 @@ For the React/Redux-based chart editor, see [chartwerk-editor](https://github.co
         # ...
         'django.contrib.humanize',
         'rest_framework',
-        'django_filters',
         'chartwerk',
     ]
 
