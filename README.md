@@ -1,9 +1,7 @@
-![POLITICO](https://rawgithub.com/The-Politico/src/master/images/logo/badge.png)
-
 # ![chartwerk](docs/logo.png)
 
 
-A django-based application to manage, create and share Chartwerk charts, built with [django REST framework](http://www.django-rest-framework.org/).
+A Django-based application to manage, create and share Chartwerk charts, built with [Django REST framework](http://www.django-rest-framework.org/).
 
 For the React/Redux-based chart editor, see [chartwerk-editor](https://github.com/DallasMorningNews/chartwerk-editor).
 
@@ -41,7 +39,6 @@ For the React/Redux-based chart editor, see [chartwerk-editor](https://github.co
         # ...
         'django.contrib.humanize',
         'rest_framework',
-        'django_filters',
         'chartwerk',
     ]
 
