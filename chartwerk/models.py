@@ -9,6 +9,18 @@ from django.utils.text import slugify
 from uuslug import uuslug
 
 
+def template_icon_upload_path(instance, filename):
+    fileName, fileExtension = os.path.splitext(filename)
+    return os.path.join(
+        'templates/icons',
+        '{}-{}{}'.format(
+            slugify(instance.title),
+            datetime.now().strftime('%Y%m%d'),
+            fileExtension
+        )
+    )
+
+
 class Chartwerk(models.Model):
     slug = models.SlugField(
         max_length=250,
@@ -41,16 +53,17 @@ class Chart(Chartwerk):
     embed_data = JSONField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        char_set = string.ascii_uppercase + \
-            string.ascii_lowercase + \
-            string.digits
-        uuid = ''.join(random.choice(char_set) for _ in range(8))
-        self.slug = uuslug(
-            uuid,
-            instance=self,
-            max_length=8,
-            separator=''
-        )
+        if not self.slug:
+            char_set = string.ascii_uppercase + \
+                string.ascii_lowercase + \
+                string.digits
+            uuid = ''.join(random.choice(char_set) for _ in range(8))
+            self.slug = uuslug(
+                uuid,
+                instance=self,
+                max_length=8,
+                separator=''
+            )
         super(Chart, self).save(*args, **kwargs)
 
     def __str__(self): # noqa
@@ -58,22 +71,11 @@ class Chart(Chartwerk):
 
 
 class Template(Chartwerk):
-
-    def icon_upload_path(instance, filename):
-        fileName, fileExtension = os.path.splitext(filename)
-        return os.path.join(
-            'templates/icons',
-            '{}-{}{}'.format(
-                slugify(instance.title),
-                datetime.now().strftime('%Y%m%d'),
-                fileExtension
-            )
-        )
-
     def chart_count(self):
         return Chart.objects.filter(data__template__title=self.title).count()
 
-    icon = models.ImageField(upload_to=icon_upload_path, blank=True, null=True)
+    icon = models.ImageField(
+        upload_to=template_icon_upload_path, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):

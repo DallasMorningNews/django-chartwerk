@@ -1,7 +1,6 @@
 import json
 import os
 from importlib import import_module
-from urllib.parse import urlparse
 
 from chartwerk.models import Chart, FinderQuestion, Template, TemplateProperty
 from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
@@ -14,6 +13,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import resolve
 from django.utils.decorators import method_decorator
+from django.utils.six.moves.urllib.parse import urlparse
 from django.views.generic import DetailView, ListView, TemplateView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
