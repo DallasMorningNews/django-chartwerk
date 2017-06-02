@@ -35,6 +35,7 @@ six==1.10.0
 slacker==0.9.50
 snowballstemmer==1.2.1
 Sphinx==1.6.2
+sphinx-rtd-theme==0.2.4
 sphinxcontrib-websupport==1.0.1
 typing==3.6.1
 Unidecode==0.4.20
