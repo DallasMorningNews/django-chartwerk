@@ -104,5 +104,5 @@ def commit_template(pk):
     )
     commit_script(
         '/{}/template.json'.format(template.slug),
-        json.dumps(template.data)
+        json.dumps(template.data, sort_keys=True, indent=4)
     )
