@@ -9,8 +9,11 @@ from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
                                    TemplateSerializer)
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.http import (
+    HttpResponseBadRequest,
+    HttpResponseNotFound,
+    JsonResponse
+)
 from django.urls import resolve
 from django.utils.decorators import method_decorator
 from django.utils.six.moves.urllib.parse import urlparse
@@ -181,41 +184,20 @@ class ChartEmbedViewSet(viewsets.ModelViewSet):
 
 def oEmbed(request):
     """Return an oEmbed json response."""
-    def simple_string(split_string):
-        """Return a string stripped of extra whitespace."""
-        return ' '.join(split_string.split())
+    if 'url' not in request.GET:
+        return HttpResponseBadRequest('url parameter is required.')
 
     url = request.GET.get('url')
     size = request.GET.get('size', 'double')
+
     path = urlparse(url).path
     slug = resolve(path).kwargs['slug']
-    chart = get_object_or_404(Chart, slug=slug)
-    oembed = {
-        "version": "1.0",
-        "url": url,
-        "title": chart.title,
-        "provider_url": settings.CHARTWERK_DOMAIN,
-        "provider_name": "Chartwerk",
-        "author_name": chart.creator,
-        "chart_id": chart.slug,
-        "type": "rich",
-        "size": size,
-        "width": chart.embed_data['double']['width'] or "",
-        "height": chart.embed_data['double']['height'] or "",
-        "single_width": chart.embed_data['single']['width'] or "",
-        "single_height": chart.embed_data['single']['height'] or "",
-        "html": simple_string("""<div
-            class="chartwerk"
-            data-id="{}"
-            data-embed="{}"
-            data-size="{}"
-        ></div>
-        <script src='{}'></script>
-        """).format(
-            chart.slug,
-            json.dumps(chart.embed_data).replace('"', '&quot;'),
-            size,
-            settings.CHARTWERK_EMBED_SCRIPT,
-        )
-    }
-    return JsonResponse(oembed)
+
+    try:
+        chart = Chart.objects.get(slug=slug)
+    except Chart.DoesNotExist:
+        return HttpResponseNotFound('Chart matching "%s" not found.' % (
+            url,
+        ))
+
+    return JsonResponse(chart.oembed(url, size=size))
