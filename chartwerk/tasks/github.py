@@ -1,4 +1,4 @@
-"""Celery task to commit template tasks to github."""
+"""Celery task to commit templates to GitHub."""
 from __future__ import absolute_import
 import json
 import logging
@@ -14,7 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 def get_github_credentials():
-    """Get the credentials kwargs we're going to pass to Github()"""
+    """Get the credentials kwargs we're going to pass to Github().
+    
+    Prefers a personal token over a username/password.
+    """
     try:
         return dict(login_or_token=settings.CHARTWERK_GITHUB_TOKEN)
     except AttributeError:
@@ -28,7 +31,10 @@ def get_github_credentials():
 
 
 def get_repository():
-    """Get the Github repo specified in settings, adding if it doesn't exist"""
+    """Get the GitHub repo specified in settings or the default.
+    
+    If the repo doesn't exist, try to create it.
+    """
     try:
         repo_name = getattr(
             settings,
@@ -56,7 +62,7 @@ def get_repository():
 
 
 def commit_script(path, script):
-    """Commit script string to github repo."""
+    """Commit script string to GitHub repo."""
     repository = get_repository()
 
     try:
@@ -78,7 +84,7 @@ def commit_script(path, script):
 
 @shared_task
 def commit_template(pk):
-    """Commit template scripts to github."""
+    """Commit template scripts to GitHub."""
     repository = get_repository()
 
     if repository is None:
