@@ -8,6 +8,7 @@ from celery import shared_task
 from slacker import Slacker
 from django.conf import settings
 from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.urls import reverse
 
 from chartwerk.models import Chart, Template
 
@@ -48,9 +49,12 @@ def notify_slack(pk):
     slack = Slacker(settings.CHARTWERK_SLACK_TOKEN)
 
     try:
-        chart_url = os.path.join(DOMAIN, 'chart', werk.slug)
+        chart_url = os.path.join(
+            DOMAIN,
+            reverse('chartwerk_chart', kwargs={'slug': werk.slug})[1:]
+        )
         attachmentData = [{
-            'fallback': '{} created a new chart, "{}" at {}/'.format(
+            'fallback': '{} created a new chart, "{}" at {}'.format(
                 get_slack_user(slack, werk.author),
                 werk.title,
                 chart_url
@@ -60,7 +64,7 @@ def notify_slack(pk):
                 get_slack_user(slack, werk.author)
             ),
             'title': werk.title,
-            'title_link': '{}/'.format(chart_url),
+            'title_link': chart_url,
             'text': werk.data['template']['title'],
             'thumb_url': get_template_icon(
                 werk.data['template']['title']
