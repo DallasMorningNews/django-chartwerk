@@ -125,7 +125,11 @@ String module path to a decorator that should be applied to Chartwerk views to a
 
 - `CHARTWERK_DB`
 
-If you aren't using PostgreSQL in your main project, you can separate the database for django-chartwerk from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`.
+If you aren't using PostgreSQL in your main project, you can separate the database for django-chartwerk from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`. Then run migrations for your separate database:
+
+```bash
+$ python manage.py migrate --database chartwerk
+```
 
 - `CHARTWERK_COLOR_SCHEMES`
 
