@@ -28,14 +28,13 @@ def get_template_icon(template_title):
 def get_slack_user(slack, email):
     """Get a Slack user by email."""
     users = slack.users.list().body['members']
-    user = 'a stranger'
     for u in users:
         if u.get('profile', {}).get('email', '') == email:
-            user = '<@{}|{}>'.format(
+            return '<@{}|{}>'.format(
                 u.get('id'),
                 u.get('name', 'stranger')
             )
-    return user
+    return 'a stranger'
 
 
 @shared_task
@@ -73,11 +72,19 @@ def notify_slack(pk):
             ),
             'ts': int(time.time())
         }]
+
+        bot_icon = os.path.join(
+            DOMAIN,
+            static('chartwerk/img/chartwerk_60.png')[1:]
+        )
+
         slack.chat.post_message(
-            settings.CHARTWERK_SLACK_CHANNEL,
+            getattr(settings, 'CHARTWERK_SLACK_CHANNEL', 'chartwerk'),
             '',
-            as_user=True,
-            attachments=attachmentData
+            attachments=attachmentData,
+            as_user=False,
+            icon_url=bot_icon,
+            username='Chartwerk'
         )
     except Exception:
         logging.exception("Slack notification error")
