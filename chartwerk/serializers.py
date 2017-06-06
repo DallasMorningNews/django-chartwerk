@@ -37,8 +37,12 @@ class TemplateSerializer(serializers.HyperlinkedModelSerializer):
     def create(self, validated_data):
         properties_data = validated_data.pop('template_properties')
         template = Template.objects.create(**validated_data)
-        for property in properties_data:
-            obj = TemplateProperty.objects.get(slug=property.get('slug'))
+        for property_ in properties_data:
+            try:
+                obj = TemplateProperty.objects.get(slug=property_.get('slug'))
+            except TemplateProperty.DoesNotExist:
+                continue
+
             obj.template.add(template)
         return template
 
@@ -51,9 +55,14 @@ class TemplateSerializer(serializers.HyperlinkedModelSerializer):
         # SYNC template tags
         tags_list = []
         # ADD new template tags
-        for property in properties_data:
-            slug = property.get('slug')
-            obj = TemplateProperty.objects.get(slug=slug)
+        for property_ in properties_data:
+            slug = property_.get('slug')
+
+            try:
+                obj = TemplateProperty.objects.get(slug=slug)
+            except TemplateProperty.DoesNotExist:
+                continue
+
             obj.template.add(instance)
             tags_list.append(slug)
         # REMOVE any template tags not in the new set
