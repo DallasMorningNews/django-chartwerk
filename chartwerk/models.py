@@ -7,6 +7,7 @@ from datetime import datetime
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from uuslug import uuslug
 
@@ -80,7 +81,10 @@ class Chart(Chartwerk):
             "version": "1.0",
             "url": url,
             "title": self.title,
-            "provider_url": settings.CHARTWERK_DOMAIN,
+            "provider_url": os.path.join(
+                settings.CHARTWERK_DOMAIN,
+                reverse('chartwerk_home')[1:]
+            ),
             "provider_name": "Chartwerk",
             "author_name": self.creator,
             "chart_id": self.slug,
@@ -118,7 +122,7 @@ class Template(Chartwerk):
         self.slug = uuslug(self.title, instance=self)
         super(Template, self).save(*args, **kwargs)
 
-    def __str__(self): # noqa
+    def __str__(self):
         return self.slug
 
 
@@ -139,7 +143,7 @@ class TemplateProperty(models.Model):
         self.slug = uuslug(self.property, instance=self)
         super(TemplateProperty, self).save(*args, **kwargs)
 
-    def __str__(self): # noqa
+    def __str__(self):
         return self.property
 
     class Meta:
@@ -150,5 +154,5 @@ class FinderQuestion(models.Model):
     question = models.CharField(max_length=250)
     order = models.PositiveSmallIntegerField(unique=True)
 
-    def __str__(self): # noqa
+    def __str__(self):
         return self.question
