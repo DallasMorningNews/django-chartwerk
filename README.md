@@ -119,122 +119,85 @@ Chartwerk allows you to set a number of configuration options. The preferred met
 
 ### App settings
 
-- `CHARTWERK_AUTH_DECORATOR`
+- `CHARTWERK_AUTH_DECORATOR`: String module path to a decorator that should be applied to Chartwerk views to authenticate users. Defaults to `"django.contrib.auth.decorators.login_required"`, but can also be `"django.contrib.admin.views.decorators.staff_member_required"`, for example. (This decorator is not applied to views in DEBUG mode.)
 
-String module path to a decorator that should be applied to Chartwerk views to authenticate users. Defaults to `"django.contrib.auth.decorators.login_required"`, but can also be `"django.contrib.admin.views.decorators.staff_member_required"`, for example. (This decorator is not applied to views in DEBUG mode.)
+- `CHARTWERK_DB`: If you aren't using PostgreSQL in your main project, you can separate the database for django-chartwerk from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`. Then run migrations for your separate database:
 
-- `CHARTWERK_DB`
+    ```bash
+    $ python manage.py migrate --database chartwerk
+    ```
 
-If you aren't using PostgreSQL in your main project, you can separate the database for django-chartwerk from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`. Then run migrations for your separate database:
+- `CHARTWERK_COLOR_SCHEMES`: Set this variable in your project settings to declare a default set of color schemes your users can select for chart elements. The schemes must be organized by type as a dictionary with keys `categorical`, `sequential` and `diverging`. Name each color scheme and then provide a list of hexadecimal color codes. For example:
 
-```bash
-$ python manage.py migrate --database chartwerk
-```
-
-- `CHARTWERK_COLOR_SCHEMES`
-
-Set this variable in your project settings to declare a default set of color schemes your users can select for chart elements. The schemes must be organized by type as a dictionary with keys `categorical`, `sequential` and `diverging`. Name each color scheme and then provide a list of hexadecimal color codes. For example:
-
-```python
-# settings.py
-CHARTWERK_COLOR_SCHEMES = {
-    'categorical': {
-        'default': [
-            '#AAAAAA',
-            '#BBB'
-            # etc.
-        ],
+    ```python
+    # settings.py
+    CHARTWERK_COLOR_SCHEMES = {
+        'categorical': {
+            'default': [
+                '#AAAAAA',
+                '#BBB'
+                # etc.
+            ],
+        }
+        'sequential': {
+            'reds': [
+                '#FF0000',
+                '#8B0000',
+                # etc.
+            ],
+            'blues': [
+                '#0000FF,
+                '#000080',
+                # etc.
+            ]
+        },
+        'diverging': {
+            'redBlue': [
+                '#FF0000',
+                '#0000FF',
+                # etc.
+            ]
+        }
     }
-    'sequential': {
-        'reds': [
-            '#FF0000',
-            '#8B0000',
-            # etc.
-        ],
-        'blues': [
-            '#0000FF,
-            '#000080',
-            # etc.
-        ]
-    },
-    'diverging': {
-        'redBlue': [
-            '#FF0000',
-            '#0000FF',
-            # etc.
-        ]
-    }
-}
-```
+    ```
 
 ### AWS Publishing
 
-- `AWS_ACCESS_KEY_ID`
+- `AWS_ACCESS_KEY_ID`: AWS access key ID. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables).
 
-AWS access key ID. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables). **Required as environment variable**
+- `AWS_SECRET_ACCESS_KEY`: AWS secret access key. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables).
 
-- `AWS_SECRET_ACCESS_KEY`
+- `CHARTWERK_AWS_BUCKET`: AWS S3 bucket name to publish charts to. **Required.**
 
-AWS secret access key. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables). **Required as environment variable.**
+- `CHARTWERK_AWS_PATH`: Path within your S3 bucket to append to object keys before publishing. Defaults to `"charts"`
 
-- `CHARTWERK_AWS_BUCKET`
+- `CHARTWERK_CACHE_HEADER`: Cache header to add to chart files when published to S3. Defaults to `"max-age=300"`.
 
-AWS S3 bucket name to publish charts to. **Required.**
+- `CHARTWERK_DOMAIN`: The domain of the app running Chartwerk. For example, your app may be hosted at `"http://myapp.mydomain.com"`. **Required.**
 
-- `CHARTWERK_AWS_PATH`
+- `CHARTWERK_EMBED_SCRIPT`: Absolute URL to your custom script for embedding Chartwerk charts in your CMS. **Required.**
 
-Path within your S3 bucket to append to object keys before publishing. Defaults to `"charts"`
+- `CHARTWERK_JQUERY`: URL to jQuery version you want to include in baked-out charts. Defaults to `"https://code.jquery.com/jquery-3.2.1.slim.min.js"`.
 
-- `CHARTWERK_CACHE_HEADER`
-
-Cache header to add to chart files when published to S3. Defaults to `"max-age=300"`.
-
-- `CHARTWERK_DOMAIN`
-
-The domain of the app running Chartwerk. For example, your app may be hosted at `"http://myapp.mydomain.com"`. **Required.**
-
-- `CHARTWERK_EMBED_SCRIPT`
-
-Absolute URL to your custom script for embedding Chartwerk charts in your CMS. **Required.**
-
-- `CHARTWERK_JQUERY`
-
-URL to jQuery version you want to include in baked-out charts. Defaults to `"https://code.jquery.com/jquery-3.2.1.slim.min.js"`.
-
-
-- `CHARTWERK_OEMBED`
-
-If your CMS is configured to use oEmbed, set this setting to `True` which will return oEmbed code to users in the editor. Default is `False`.
+- `CHARTWERK_OEMBED`: If your CMS is configured to use oEmbed, set this setting to `True` which will return oEmbed code to users in the editor. Default is `False`.
 
 
 ### Github
 
 django-chartwerk can commit your chart templates to a GitHub repository for safe keeping.
 
-- `CHARTWERK_GITHUB_ORG`
+- `CHARTWERK_GITHUB_ORG`: To keep templates in a repo under a GitHub organization, set this variable to the GitHub org name.
 
-To keep templates in a repo under a GitHub organization, set this variable to the GitHub org name.
+- `CHARTWERK_GITHUB_REPO`: The name of the repo to save chart templates to. Defaults to `"chartwerk_chart-templates"`.
 
-- `CHARTWERK_GITHUB_PASSWORD`
+- `CHARTWERK_GITHUB_USER`, `CHARTWERK_GITHUB_PASSWORD`: GitHub username and password.
 
-GitHub user password. Can only be set as an environment variable.
-
-- `CHARTWERK_GITHUB_REPO`
-
-The name of the repo to save chart templates to. Defaults to `"chartwerk_chart-templates"`.
-
-- `CHARTWERK_GITHUB_USER`
-
-GitHub username. Can only be set as an environment variable.
+- `CHARTWERK_GITHUB_TOKEN`: GitHub personal access token with writes to edit private repositories. Can only be set in lieu of `CHARTWERK_GITHUB_USER` and `CHARTWERK_GITHUB_PASSWORD`.
 
 ### Slack
 
 Chartwerk can send notifications to a Slack channel whenever a new chart is created.
 
-- `CHARTWERK_SLACK_CHANNEL`
+- `CHARTWERK_SLACK_CHANNEL`: Name of the Slack channel to post notifications to. Defaults to `"#chartwerk"`.
 
-Name of the Slack channel to post notifications to. Defaults to `"#chartwerk"`.
-
-- `CHARTWERK_SLACK_TOKEN`
-
-A Slack API token.
+- `CHARTWERK_SLACK_TOKEN`: A Slack API token.
