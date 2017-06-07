@@ -179,9 +179,6 @@ Chartwerk allows you to set a number of configuration options. The preferred met
 
 - `CHARTWERK_JQUERY`: URL to jQuery version you want to include in baked-out charts. Defaults to `"https://code.jquery.com/jquery-3.2.1.slim.min.js"`.
 
-- `CHARTWERK_OEMBED`: If your CMS is configured to use oEmbed, set this setting to `True` which will return oEmbed code to users in the editor. Default is `False`.
-
-
 ### Github
 
 django-chartwerk can commit your chart templates to a GitHub repository for safe keeping.
@@ -201,3 +198,18 @@ Chartwerk can send notifications to a Slack channel whenever a new chart is crea
 - `CHARTWERK_SLACK_CHANNEL`: Name of the Slack channel to post notifications to. Defaults to `"#chartwerk"`.
 
 - `CHARTWERK_SLACK_TOKEN`: A Slack API token.
+
+### oEmbed
+
+Chartwerk can act as an [oEmbed provider](http://oembed.com/), returning embeddable charts using an oEmbed endpoint at `api/oembed`
+
+- `CHARTWERK_OEMBED`: Set to `True` to have the oEmbed endpoint returned in the API's context object
+
+- `CHARTWERK_OEMBED_EXTRA_PATTERNS`: If you'd like the oEmbed endpoint to support any additional URL patterns, provide them here. This can be useful if, for example, you alter your root URL configuration and all of the chart URLs change. Each pattern should be provided as a regular expression, with named capture groups that can be used to lookup charts. For example:
+
+    ```python
+    # settings.py
+    CHARTWERK_OEMBED_EXTRA_PATTERNS = (
+        r'^old-chartwerk/chart/(?P<slug>[-\w]+)/$',
+    )
+    ```
