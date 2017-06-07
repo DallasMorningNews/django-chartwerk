@@ -11,7 +11,6 @@ from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
 from django.conf import settings
 from django.core.urlresolvers import NoReverseMatch, reverse
 from django.http import (
-    Http404,
     HttpResponseBadRequest,
     HttpResponseNotFound,
     JsonResponse
@@ -196,7 +195,7 @@ def oEmbed(request):
 
     try:
         chart_kwargs = resolve(path).kwargs
-    except (NoReverseMatch, Http404,):
+    except NoReverseMatch:
         for pattern in getattr(
                 settings, 'CHARTWERK_OEMBED_EXTRA_PATTERNS', []):
             chart_kwargs = re.search(pattern, path[1:])
@@ -212,7 +211,7 @@ def oEmbed(request):
 
     try:
         chart = Chart.objects.get(**chart_kwargs)
-        return JsonResponse(chart.oembed(url, size=size))
+        return JsonResponse(chart.oembed(size=size))
     except Chart.DoesNotExist:
         return HttpResponseNotFound(
             'Chart matching "%s" not found.' % chart_kwargs
