@@ -50,7 +50,12 @@ def secure(view):
     Can also be 'django.contrib.admin.views.decorators.staff_member_required'
     or a custom decorator.
     """
-    auth_decorator = import_auth(settings.CHARTWERK_AUTH_DECORATOR)
+    auth_module_path = getattr(
+        settings,
+        'CHARTWERK_AUTH_DECORATOR',
+        'django.contrib.auth.decorators.login_required'
+    )
+    auth_decorator = import_auth(auth_module_path)
     return (
         view if settings.DEBUG
         else method_decorator(auth_decorator, name='dispatch')(view)

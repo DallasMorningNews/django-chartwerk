@@ -16,7 +16,7 @@ from chartwerk.models import Chart
 logger = logging.getLogger(__name__)
 
 DOMAIN = settings.CHARTWERK_DOMAIN
-CACHE_HEADER = settings.CHARTWERK_CACHE_HEADER
+CACHE_HEADER = getattr(settings, 'CHARTWERK_CACHE_HEADER', 'max-age=300')
 
 
 def get_chartwerk_bucket():
