@@ -1,21 +1,19 @@
 """Celery task for sending Slack notifications."""
 from __future__ import absolute_import
+
 import logging
 import os
 import time
 
-from celery import shared_task
 from slacker import Slacker
-from django.conf import settings
+
+from celery import shared_task
+from chartwerk.conf import settings as app_settings
+from chartwerk.models import Chart, Template
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.urls import reverse
 
-from chartwerk.models import Chart, Template
-
-
 logger = logging.getLogger(__name__)
-
-DOMAIN = settings.CHARTWERK_DOMAIN
 
 
 def get_template_icon(template_title):
@@ -41,16 +39,16 @@ def get_slack_user(slack, email):
 @shared_task
 def notify_slack(pk):
     """Send slack notification."""
-    werk = Chart.objects.get(pk=pk)
-
-    if not hasattr(settings, 'CHARTWERK_SLACK_TOKEN'):
+    if not app_settings.SLACK_TOKEN:
         return
 
-    slack = Slacker(settings.CHARTWERK_SLACK_TOKEN)
+    werk = Chart.objects.get(pk=pk)
+
+    slack = Slacker(app_settings.SLACK_TOKEN)
 
     try:
         chart_url = os.path.join(
-            DOMAIN,
+            app_settings.DOMAIN,
             reverse('chartwerk_chart', kwargs={'slug': werk.slug})[1:]
         )
         attachmentData = [{
@@ -71,19 +69,19 @@ def notify_slack(pk):
             ),
             'footer': 'chartwerk',
             'footer_icon': os.path.join(
-                DOMAIN,
+                app_settings.DOMAIN,
                 static('chartwerk/img/chartwerk_30.png')[1:]
             ),
             'ts': int(time.time())
         }]
 
         bot_icon = os.path.join(
-            DOMAIN,
+            app_settings.DOMAIN,
             static('chartwerk/img/chartwerk_60.png')[1:]
         )
 
         slack.chat.post_message(
-            getattr(settings, 'CHARTWERK_SLACK_CHANNEL', 'chartwerk'),
+            app_settings.SLACK_CHANNEL,
             '',
             attachments=attachmentData,
             as_user=False,

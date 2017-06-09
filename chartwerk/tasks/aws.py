@@ -1,39 +1,35 @@
 """Celery task to bake charts to aws."""
 from __future__ import absolute_import
+
 import logging
 import os
 
 from boto3.session import Session
 from celery import shared_task
-from django.conf import settings
+from chartwerk.conf import settings as app_settings
+from chartwerk.models import Chart
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.template.loader import render_to_string
 from django.utils.six.moves.urllib.request import urlopen
 
-from chartwerk.models import Chart
-
-
 logger = logging.getLogger(__name__)
-
-DOMAIN = settings.CHARTWERK_DOMAIN
-CACHE_HEADER = settings.CHARTWERK_CACHE_HEADER
 
 
 def get_chartwerk_bucket():
     session = Session(
         region_name='us-east-1',
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        aws_access_key_id=app_settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=app_settings.AWS_SECRET_ACCESS_KEY
     )
     s3 = session.resource('s3')
-    return s3.Bucket(settings.CHARTWERK_AWS_BUCKET)
+    return s3.Bucket(app_settings.AWS_BUCKET)
 
 
 def render_local_static(static_file):
     """Render local static file to string to inject into template."""
     return urlopen(
         os.path.join(
-            DOMAIN,
+            app_settings.DOMAIN,
             static(static_file)[1:]
         )
     ).read().decode('UTF-8')
@@ -102,7 +98,7 @@ def write_to_aws(pk):
 
     try:
         werk.client = {
-            'jquery': settings.CHARTWERK_JQUERY,
+            'jquery': app_settings.JQUERY,
             'scripts': render_local_static(
                 'chartwerk/js/client.bundle.js'),
             'styles': render_local_static('chartwerk/css/client.css'),
@@ -117,27 +113,27 @@ def write_to_aws(pk):
         # DOUBLE-WIDE
         werk.data['ui']['size'] = 'double'
         key = os.path.join(
-            getattr(settings, 'CHARTWERK_AWS_PATH', 'charts'),
+            app_settings.AWS_PATH,
             "{}.html".format(werk.slug)
         )
         bucket.Object(key).put(
             Body=render_to_string(
                 'chartwerk/base_chart.html', {'werk': werk}),
             ContentType='text/html',
-            CacheControl=CACHE_HEADER,
+            CacheControl=app_settings.CACHE_HEADER,
             ACL='public-read',
         )
         # SINGLE-WIDE
         werk.data['ui']['size'] = 'single'
         key = os.path.join(
-            getattr(settings, 'CHARTWERK_AWS_PATH', 'charts'),
+            app_settings.AWS_PATH,
             "{}_single.html".format(werk.slug)
         )
         bucket.Object(key).put(
             Body=render_to_string(
                 'chartwerk/base_chart.html', {'werk': werk}),
             ContentType='text/html',
-            CacheControl=CACHE_HEADER,
+            CacheControl=app_settings.CACHE_HEADER,
             ACL='public-read',
         )
     except Exception:
