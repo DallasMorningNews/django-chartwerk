@@ -4,7 +4,7 @@ import random
 import string
 from datetime import datetime
 
-from chartwerk.conf import app_settings
+from chartwerk.conf import settings as app_settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.urls import reverse
