@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from importlib import import_module
 
 from chartwerk.models import Chart, FinderQuestion, Template, TemplateProperty
@@ -8,7 +9,7 @@ from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
                                    TemplatePropertySerializer,
                                    TemplateSerializer)
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import NoReverseMatch, reverse
 from django.http import (
     HttpResponseBadRequest,
     HttpResponseNotFound,
@@ -184,20 +185,34 @@ class ChartEmbedViewSet(viewsets.ModelViewSet):
 
 def oEmbed(request):
     """Return an oEmbed json response."""
-    if 'url' not in request.GET:
+    if 'url' not in request.GET or not request.GET.get('url'):
         return HttpResponseBadRequest('url parameter is required.')
 
     url = request.GET.get('url')
     size = request.GET.get('size', 'double')
 
     path = urlparse(url).path
-    slug = resolve(path).kwargs['slug']
 
     try:
-        chart = Chart.objects.get(slug=slug)
-    except Chart.DoesNotExist:
-        return HttpResponseNotFound('Chart matching "%s" not found.' % (
-            url,
-        ))
+        chart_kwargs = resolve(path).kwargs
+    except NoReverseMatch:
+        for pattern in getattr(
+                settings, 'CHARTWERK_OEMBED_EXTRA_PATTERNS', []):
+            chart_kwargs = re.search(pattern, path[1:])
 
-    return JsonResponse(chart.oembed(url, size=size))
+            if chart_kwargs is not None:
+                chart_kwargs = chart_kwargs.groupdict()
+                break
+
+    if chart_kwargs is None:
+        return HttpResponseNotFound(
+            '"%s" did not match any supported oEmbed URL patterns.' % url
+        )
+
+    try:
+        chart = Chart.objects.get(**chart_kwargs)
+        return JsonResponse(chart.oembed(size=size))
+    except Chart.DoesNotExist:
+        return HttpResponseNotFound(
+            'Chart matching "%s" not found.' % chart_kwargs
+        )
