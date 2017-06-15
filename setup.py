@@ -55,7 +55,6 @@ setup(
     install_requires=[
         'boto3>=1.4.0',
         'celery>=4.0.0',
-        'dj-database-url>=0.3.0',
         'Django>=1.9',
         'django-uuslug>=1.1.8',
         'djangorestframework>=2.4',

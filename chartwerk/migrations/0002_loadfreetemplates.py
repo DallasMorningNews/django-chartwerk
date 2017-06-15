@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.management import call_command
 from django.db import migrations
 
@@ -6,10 +5,7 @@ FIXTURE = 'free_templates'
 
 
 def load_fixture(apps, schema_editor):
-    db = 'default'
-    if 'chartwerk' in settings.DATABASES:
-        db = 'chartwerk'
-    call_command('loaddata', FIXTURE, app_label='chartwerk', database=db)
+    call_command('loaddata', FIXTURE, app_label='chartwerk')
 
 
 def unload_fixture(apps, schema_editor):
