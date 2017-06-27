@@ -9,7 +9,7 @@ For the React/Redux-based chart editor, see [chartwerk-editor](https://github.co
 
 ## Assumptions
 
-1. django-chartwerk uses Django's [JSONField](https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield) field. Therefore, PostgreSQL is required. You can, however, separate django-chartwerk's database from others in your project easily by specifying a CHARTWERK_DB environment variable.
+1. django-chartwerk uses Django's [JSONField](https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield) field. Therefore, PostgreSQL is required. You can, however, separate django-chartwerk's database from others in your project easily by using a custom router, such as [the one outlined in the Django documentation](https://docs.djangoproject.com/en/1.11/topics/db/multi-db/#automatic-database-routing).
 
 2. django-chartwerk is written to bake charts to Amazon Web Service's Simple Storage Service (S3). We assume that's your plan, too.
 
@@ -90,21 +90,7 @@ For the React/Redux-based chart editor, see [chartwerk-editor](https://github.co
     __all__ = ['celery_app']
     ```
 
-6. Make sure you have django-chartwerk connected to a PostgreSQL database. For example using [dj_database_url](https://github.com/kennethreitz/dj-database-url):
-
-    ```bash
-    # .env
-    export DATABASE_URL=postgresql://user:password@127.0.0.1:5432/database
-    ```
-
-    ```python
-    # project/settings.py
-    import dj_database_url
-
-    DATABASES = {
-        'default': dj_database_url.config()
-    }
-    ```
+6. Make sure you have django-chartwerk connected to a PostgreSQL database.
 
 7. Run migrations, start the dev server and enjoy!
 
@@ -120,12 +106,6 @@ Chartwerk allows you to set a number of configuration options.
 ### App settings
 
 - `CHARTWERK_AUTH_DECORATOR`: String module path to a decorator that should be applied to Chartwerk views to authenticate users. Defaults to `"django.contrib.auth.decorators.login_required"`, but can also be `"django.contrib.admin.views.decorators.staff_member_required"`, for example. (This decorator is not applied to views in DEBUG mode.)
-
-- `CHARTWERK_DB`: If you aren't using PostgreSQL in your main project, you can separate the database for django-chartwerk from your other apps. Add the CHARTWERK_DB environment variable, a la [DATABASE_URL](https://github.com/kennethreitz/dj-database-url). You can also add the database explicitly to the DATABASES dict in project settings as `"chartwerk"`. Then run migrations for your separate database:
-
-    ```bash
-    $ python manage.py migrate --database chartwerk
-    ```
 
 - `CHARTWERK_COLOR_SCHEMES`: Set this variable in your project settings to declare a default set of color schemes your users can select for chart elements. The schemes must be organized by type as a dictionary with keys `categorical`, `sequential` and `diverging`. Name each color scheme and then provide a list of hexadecimal color codes. For example:
 
@@ -179,9 +159,6 @@ Chartwerk allows you to set a number of configuration options.
 
 - `CHARTWERK_JQUERY`: URL to jQuery version you want to include in baked-out charts. Defaults to `"https://code.jquery.com/jquery-3.2.1.slim.min.js"`.
 
-- `CHARTWERK_OEMBED`: If your CMS is configured to use oEmbed, set this setting to `True` which will return oEmbed code to users in the editor. Default is `False`.
-
-
 ### Github
 
 django-chartwerk can commit your chart templates to a GitHub repository for safe keeping.
@@ -201,3 +178,18 @@ Chartwerk can send notifications to a Slack channel whenever a new chart is crea
 - `CHARTWERK_SLACK_CHANNEL`: Name of the Slack channel to post notifications to. Defaults to `"#chartwerk"`.
 
 - `CHARTWERK_SLACK_TOKEN`: A Slack API token.
+
+### oEmbed
+
+Chartwerk can act as an [oEmbed provider](http://oembed.com/), returning embeddable charts using an oEmbed endpoint at `api/oembed`
+
+- `CHARTWERK_OEMBED`: Set to `True` to have the oEmbed endpoint returned in the API's context object
+
+- `CHARTWERK_OEMBED_EXTRA_PATTERNS`: If you'd like the oEmbed endpoint to support any additional URL patterns, provide them here. This can be useful if, for example, you alter your root URL configuration and all of the chart URLs change. Each pattern should be provided as a regular expression, with named capture groups that can be used to lookup charts. For example:
+
+    ```python
+    # settings.py
+    CHARTWERK_OEMBED_EXTRA_PATTERNS = (
+        r'^old-chartwerk/chart/(?P<slug>[-\w]+)/$',
+    )
+    ```

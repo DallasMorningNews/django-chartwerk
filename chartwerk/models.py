@@ -72,14 +72,20 @@ class Chart(Chartwerk):
     def __str__(self):
         return "{} - {} by {}".format(self.slug, self.title, self.author)
 
-    def oembed(self, url, size='double'):
+    def get_absolute_url(self):
+        return reverse('chartwerk_chart', kwargs=dict(slug=self.slug))
+
+    def oembed(self, size='double'):
         def simple_string(split_string):
             """Return a string stripped of extra whitespace."""
             return ' '.join(split_string.split())
 
         return {
             "version": "1.0",
-            "url": url,
+            "url": os.path.join(
+                settings.CHARTWERK_DOMAIN,
+                self.get_absolute_url()[1:],
+            ),
             "title": self.title,
             "provider_url": os.path.join(
                 app_settings.DOMAIN,
