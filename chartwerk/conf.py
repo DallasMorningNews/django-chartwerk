@@ -28,39 +28,34 @@ Settings.DOMAIN = getattr(project_settings, 'CHARTWERK_DOMAIN', None)
 
 if not Settings.DOMAIN:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_DOMAIN \
-variable. Set it either in your project settings or as an \
-environment variable.')
+variable. Set it in your project settings.')
 
 Settings.EMBED_SCRIPT = getattr(
     project_settings, 'CHARTWERK_EMBED_SCRIPT', None)
 
 if not Settings.EMBED_SCRIPT:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_EMBED_SCRIPT \
-variable. Set it either in your project settings or as \
-an environment variable.')
+variable. Set it in your project settings.')
 
 Settings.AWS_BUCKET = getattr(project_settings, 'CHARTWERK_AWS_BUCKET', None)
 
 if not Settings.AWS_BUCKET:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_AWS_BUCKET \
-variable. Set it either in your project settings or as \
-an environment variable.')
+variable. Set it either in your project settings.')
 
 Settings.AWS_ACCESS_KEY_ID = getattr(
     project_settings, 'CHARTWERK_AWS_ACCESS_KEY_ID', None)
 
 if not Settings.AWS_ACCESS_KEY_ID:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_AWS_ACCESS_KEY_ID \
-variable. Set it either in your project settings or as \
-an environment variable.')
+variable. Set it in your project settings.')
 
 Settings.AWS_SECRET_ACCESS_KEY = getattr(
     project_settings, 'CHARTWERK_AWS_SECRET_ACCESS_KEY', None)
 
 if not Settings.AWS_SECRET_ACCESS_KEY:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_AWS_SECRET_ACCESS_KEY \
-variable. Set it either in your project settings or as \
-an environment variable.')
+variable. Set it in your project settings.')
 
 
 ########################
@@ -116,14 +111,12 @@ if not Settings.GITHUB_TOKEN:
     if Settings.GITHUB_PASSWORD and not Settings.GITHUB_USER:
         raise ChartwerkConfigError('You set the CHARTWERK_GITHUB_PASSWORD \
 variable, but you haven\'t set the CHARTWERK_GITHUB_USER variable. \
-Set it as an environment variable or in your project settings \
-or set CHARTWERK_GITHUB_TOKEN.')
+Set it in your project settings or set CHARTWERK_GITHUB_TOKEN.')
 
     if Settings.GITHUB_USER and not Settings.GITHUB_PASSWORD:
         raise ChartwerkConfigError('You set the CHARTWERK_GITHUB_USER \
 variable, but you haven\'t set the CHARTWERK_GITHUB_PASSWORD variable. \
-Set it as an environment variable or in your project settings \
-or set CHARTWERK_GITHUB_TOKEN.')
+Set it in your project settings or set CHARTWERK_GITHUB_TOKEN.')
 
 if Settings.GITHUB_TOKEN or Settings.GITHUB_USER:
 
