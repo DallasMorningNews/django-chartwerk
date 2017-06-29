@@ -143,9 +143,9 @@ Chartwerk allows you to set a number of configuration options.
 
 ### AWS Publishing
 
-- `CHARTWERK_AWS_ACCESS_KEY_ID`: AWS access key ID.
+- `CHARTWERK_AWS_ACCESS_KEY_ID`: AWS access key ID. **Required.**
 
-- `CHARTWERK_AWS_SECRET_ACCESS_KEY`: AWS secret access key.
+- `CHARTWERK_AWS_SECRET_ACCESS_KEY`: AWS secret access key. **Requried.**
 
 - `CHARTWERK_AWS_BUCKET`: AWS S3 bucket name to publish charts to. **Required.**
 

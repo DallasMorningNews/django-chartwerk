@@ -67,8 +67,7 @@ def build_context(context, request, chart_id='', template_id=''):
     context['chart_api'] = urlize('api/charts/')
     context['template_api'] = urlize('api/templates/')
     context['template_tags_api'] = urlize('api/template-property/')
-    context['oembed'] = urlize('api/oembed/') \
-        if app_settings.OEMBED else ''
+    context['oembed'] = app_settings.OEMBED
     context['embed_src'] = app_settings.EMBED_SCRIPT
     context['color_schemes'] = json.dumps(app_settings.COLOR_SCHEMES)
     return context
