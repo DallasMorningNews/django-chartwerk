@@ -45,6 +45,8 @@ For the React/Redux-based chart editor, see [chartwerk-editor](https://github.co
     CHARTWERK_DOMAIN = 'https://yourapp.com'
     CHARTWERK_EMBED_SCRIPT = 'https://yourapp.com/static/wherever/js/embed_v1.js'
     CHARTWERK_AWS_BUCKET = 'chartwerk'
+    CHARTWERK_AWS_ACCESS_KEY_ID = 'YOUR_ACCESS_KEY'
+    CHARTWERK_AWS_SECRET_ACCESS_KEY = 'YOUR_SECRET_KEY'
     ```
 
     _Just trying out Chartwerk locally? Set the above CHARTWERK\_ variables to gibberish. They're only really needed when you start publishing charts but will throw errors if they aren't set._
@@ -101,7 +103,7 @@ For the React/Redux-based chart editor, see [chartwerk-editor](https://github.co
 
 ## Configuration variables
 
-Chartwerk allows you to set a number of configuration options. The preferred method of setting config is through environment variables, though most config options can also be set in your project settings using the same variable name. For those options that can be set in `settings.py`, environment variables override variables in your project settings if you declare them in both places.
+Chartwerk allows you to set a number of configuration options.
 
 ### App settings
 
@@ -143,9 +145,9 @@ Chartwerk allows you to set a number of configuration options. The preferred met
 
 ### AWS Publishing
 
-- `AWS_ACCESS_KEY_ID`: AWS access key ID. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables).
+- `CHARTWERK_AWS_ACCESS_KEY_ID`: AWS access key ID. **Required.**
 
-- `AWS_SECRET_ACCESS_KEY`: AWS secret access key. See [Environment Variables config for Boto3](http://boto3.readthedocs.io/en/latest/guide/configuration.html#environment-variables).
+- `CHARTWERK_AWS_SECRET_ACCESS_KEY`: AWS secret access key. **Requried.**
 
 - `CHARTWERK_AWS_BUCKET`: AWS S3 bucket name to publish charts to. **Required.**
 
