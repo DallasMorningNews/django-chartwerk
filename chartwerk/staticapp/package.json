@@ -64,5 +64,8 @@
   },
   "browserify-shim": {
     "jquery": "global:$"
+  },
+  "dependencies": {
+    "chartwerk-editor": "git+ssh://git@github.com:DallasMorningNews/chartwerk-editor.git"
   }
 }

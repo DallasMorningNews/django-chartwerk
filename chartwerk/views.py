@@ -3,6 +3,7 @@ import os
 import re
 from importlib import import_module
 
+from chartwerk.conf import settings as app_settings
 from chartwerk.models import Chart, FinderQuestion, Template, TemplateProperty
 from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
                                    FinderQuestionSerializer,
@@ -10,11 +11,8 @@ from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
                                    TemplateSerializer)
 from django.conf import settings
 from django.core.urlresolvers import NoReverseMatch, reverse
-from django.http import (
-    HttpResponseBadRequest,
-    HttpResponseNotFound,
-    JsonResponse
-)
+from django.http import (HttpResponseBadRequest, HttpResponseNotFound,
+                         JsonResponse)
 from django.urls import resolve
 from django.utils.decorators import method_decorator
 from django.utils.six.moves.urllib.parse import urlparse
@@ -51,7 +49,7 @@ def secure(view):
     Can also be 'django.contrib.admin.views.decorators.staff_member_required'
     or a custom decorator.
     """
-    auth_decorator = import_auth(settings.CHARTWERK_AUTH_DECORATOR)
+    auth_decorator = import_auth(app_settings.AUTH_DECORATOR)
     return (
         view if settings.DEBUG
         else method_decorator(auth_decorator, name='dispatch')(view)
@@ -69,10 +67,9 @@ def build_context(context, request, chart_id='', template_id=''):
     context['chart_api'] = urlize('api/charts/')
     context['template_api'] = urlize('api/templates/')
     context['template_tags_api'] = urlize('api/template-property/')
-    context['oembed'] = urlize('api/oembed/') \
-        if settings.CHARTWERK_OEMBED else ''
-    context['embed_src'] = settings.CHARTWERK_EMBED_SCRIPT
-    context['color_schemes'] = json.dumps(settings.CHARTWERK_COLOR_SCHEMES)
+    context['oembed'] = app_settings.OEMBED
+    context['embed_src'] = app_settings.EMBED_SCRIPT
+    context['color_schemes'] = json.dumps(app_settings.COLOR_SCHEMES)
     return context
 
 

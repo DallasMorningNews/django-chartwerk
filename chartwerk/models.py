@@ -4,7 +4,7 @@ import random
 import string
 from datetime import datetime
 
-from django.conf import settings
+from chartwerk.conf import settings as app_settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.urls import reverse
@@ -88,7 +88,7 @@ class Chart(Chartwerk):
             ),
             "title": self.title,
             "provider_url": os.path.join(
-                settings.CHARTWERK_DOMAIN,
+                app_settings.DOMAIN,
                 reverse('chartwerk_home')[1:]
             ),
             "provider_name": "Chartwerk",
@@ -111,7 +111,7 @@ class Chart(Chartwerk):
                 self.slug,
                 json.dumps(self.embed_data).replace('"', '&quot;'),
                 size,
-                settings.CHARTWERK_EMBED_SCRIPT,
+                app_settings.EMBED_SCRIPT,
             )
         }
 
