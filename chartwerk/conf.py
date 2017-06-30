@@ -81,7 +81,12 @@ Settings.AUTH_DECORATOR = getattr(
         'django.contrib.auth.decorators.login_required'
     )
 
-# As a dictionary, we don't expect this in the environment
+Settings.API_PERMISSION_CLASS = getattr(
+        project_settings,
+        'CHARTWERK_API_PERMISSION_CLASS',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    )
+
 Settings.COLOR_SCHEMES = getattr(
     project_settings,
     'CHARTWERK_COLOR_SCHEMES',

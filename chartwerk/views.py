@@ -18,10 +18,9 @@ from django.utils.decorators import method_decorator
 from django.utils.six.moves.urllib.parse import urlparse
 from django.views.generic import DetailView, ListView, TemplateView
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
-def import_auth(val):
+def import_class(val):
     """Attempt to import a class from a string representation.
 
     Pattern borrowed from Django REST Framework.
@@ -33,7 +32,7 @@ def import_auth(val):
         module = import_module(module_path)
         return getattr(module, class_name)
     except (ImportError, AttributeError) as e:
-        msg = "Could not import auth decorator '{}'. {}: {}.".format(
+        msg = "Could not import auth/permission class '{}'. {}: {}.".format(
             val,
             e.__class__.__name__,
             e)
@@ -49,7 +48,7 @@ def secure(view):
     Can also be 'django.contrib.admin.views.decorators.staff_member_required'
     or a custom decorator.
     """
-    auth_decorator = import_auth(app_settings.AUTH_DECORATOR)
+    auth_decorator = import_class(app_settings.AUTH_DECORATOR)
     return (
         view if settings.DEBUG
         else method_decorator(auth_decorator, name='dispatch')(view)
@@ -146,35 +145,34 @@ class JSONResponseMixin(object):
         return context
 
 
-class ChartViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class PermissionedModelViewSet(viewsets.ModelViewSet):
+    permission_classes = (import_class(app_settings.API_PERMISSION_CLASS),)
+
+
+class ChartViewSet(PermissionedModelViewSet):
     queryset = Chart.objects.all()
     serializer_class = ChartSerializer
     lookup_field = 'slug'
 
 
-class TemplateViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class TemplateViewSet(PermissionedModelViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
     lookup_field = 'slug'
 
 
-class TemplatePropertyViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class TemplatePropertyViewSet(PermissionedModelViewSet):
     pagination_class = None
     queryset = TemplateProperty.objects.all()
     serializer_class = TemplatePropertySerializer
 
 
-class FinderQuestionViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class FinderQuestionViewSet(PermissionedModelViewSet):
     queryset = FinderQuestion.objects.all()
     serializer_class = FinderQuestionSerializer
 
 
-class ChartEmbedViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class ChartEmbedViewSet(PermissionedModelViewSet):
     queryset = Chart.objects.all()
     serializer_class = ChartEmbedSerializer
     lookup_field = 'slug'
