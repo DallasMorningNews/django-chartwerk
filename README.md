@@ -109,6 +109,8 @@ Chartwerk allows you to set a number of configuration options.
 
 - `CHARTWERK_AUTH_DECORATOR`: String module path to a decorator that should be applied to Chartwerk views to authenticate users. Defaults to `"django.contrib.auth.decorators.login_required"`, but can also be `"django.contrib.admin.views.decorators.staff_member_required"`, for example. (This decorator is not applied to views in DEBUG mode.)
 
+- `CHARTWERK_API_PERMISSION_CLASS`: String module path to a valid Django REST permission class that should be applied to the browsable API viewsets. Defaults to `"rest_framework.permissions.IsAuthenticatedOrReadOnly"`.
+
 - `CHARTWERK_COLOR_SCHEMES`: Set this variable in your project settings to declare a default set of color schemes your users can select for chart elements. The schemes must be organized by type as a dictionary with keys `categorical`, `sequential` and `diverging`. Name each color scheme and then provide a list of hexadecimal color codes. For example:
 
     ```python
