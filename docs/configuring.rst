@@ -23,17 +23,17 @@ String module path to a decorator that should be applied to Chartwerk views to a
 
 .. warning::
 
-  This decorator is not applied to views if DEBUG is true in your settings.
+  This decorator is not applied to views if DEBUG is :code:`True` in your settings.
 
 :code:`CHARTWERK_API_PERMISSION_CLASS`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-String module path to a valid Django REST permission class that should be applied to the browsable API viewsets.
+String module path to a valid Django REST permission class that should be applied to Django REST Framework's browsable API viewsets.
 
 :code:`CHARTWERK_COLOR_SCHEMES`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Set this variable in your project settings to declare a default set of color schemes your users can select for chart elements. The schemes must be organized by type as a dictionary with keys `categorical`, `sequential` and `diverging`. Name each color scheme and then provide a list of hexadecimal color codes. For example:
+Set this variable in your project settings to declare a default set of color schemes your users can select for chart elements. The schemes must be organized by type as a dictionary with keys :code:`categorical`, :code:`sequential` and :code:`diverging`. Name each color scheme and then provide a list of hexadecimal color codes. For example:
 
 .. code-block:: python
 
@@ -43,7 +43,7 @@ Set this variable in your project settings to declare a default set of color sch
     'categorical': {
         'default': [
             '#AAAAAA',
-            '#BBB'
+            '#BBB',
             # etc.
         ],
     }
@@ -54,7 +54,7 @@ Set this variable in your project settings to declare a default set of color sch
             # etc.
         ],
         'blues': [
-            '#0000FF,
+            '#0000FF',
             '#000080',
             # etc.
         ]
@@ -68,6 +68,9 @@ Set this variable in your project settings to declare a default set of color sch
     }
   }
 
+.. warning::
+
+  You should specify a :code:`default` color scheme under the :code:`categorical` key. You can name all other schemes whatever you want.
 
 
 AWS

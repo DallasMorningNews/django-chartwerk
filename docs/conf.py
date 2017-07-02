@@ -51,8 +51,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-chartwerk'
-copyright = u'2017, Jon McClure and The Dallas Morning News'
-author = u'Jon McClure and The Dallas Morning News'
+copyright = u'2017, Jon McClure'
+author = u'Jon McClure'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -162,6 +162,3 @@ texinfo_documents = [
      author, 'django-chartwerk', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-

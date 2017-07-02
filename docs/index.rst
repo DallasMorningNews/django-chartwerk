@@ -9,10 +9,12 @@ Chartwerk is an application for developing data visualizations and publishing th
    :caption: Contents:
 
    Why Chartwerk? <why>
+   What's in it? <whats-in-it>
    installing
    configuring
-
-
+   using
+   developing
+   credits
 
 
 Indices and tables

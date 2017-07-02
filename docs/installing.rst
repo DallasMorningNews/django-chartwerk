@@ -27,7 +27,7 @@ Quickstart
   $ pip install django-chartwerk
 
 
-2. Add chartwerk's dependencies and the minimum configuration variables.
+2. Add Chartwerk's dependencies and the minimum configuration variables.
 
 .. code-block:: python
 
@@ -50,7 +50,7 @@ Quickstart
 
   Just trying out Chartwerk locally? Set the above CHARTWERK_ variables to gibberish. They're only needed when you start publishing charts but will throw errors if they aren't set.
 
-3. Add chartwerk to your project's `urls.py`.
+3. Add Chartwerk to your project's `urls.py`.
 
 .. code-block:: python
 
@@ -93,5 +93,5 @@ Quickstart
 
 ::
 
-  $ python manage.py migrate
+  $ python manage.py migrate chartwerk
   $ python manage.py runserver
