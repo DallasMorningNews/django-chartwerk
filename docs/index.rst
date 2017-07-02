@@ -1,16 +1,17 @@
-.. django-chartwerk documentation master file, created by
-   sphinx-quickstart on Fri Jun  2 16:39:05 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+==========================
+django-chartwerk |release|
+==========================
 
-Welcome to django-chartwerk's documentation!
-============================================
+Chartwerk is an application for developing data visualizations and publishing them as embeddable, flat pages to Amazon S3.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   second-docs-page
+   Why Chartwerk? <why>
+   installing
+   configuring
+
 
 
 

@@ -1,25 +1,26 @@
 import json
 import os
+import re
 from importlib import import_module
 
+from chartwerk.conf import settings as app_settings
 from chartwerk.models import Chart, FinderQuestion, Template, TemplateProperty
 from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
                                    FinderQuestionSerializer,
                                    TemplatePropertySerializer,
                                    TemplateSerializer)
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.core.urlresolvers import NoReverseMatch, reverse
+from django.http import (HttpResponseBadRequest, HttpResponseNotFound,
+                         JsonResponse)
 from django.urls import resolve
 from django.utils.decorators import method_decorator
 from django.utils.six.moves.urllib.parse import urlparse
 from django.views.generic import DetailView, ListView, TemplateView
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
-def import_auth(val):
+def import_class(val):
     """Attempt to import a class from a string representation.
 
     Pattern borrowed from Django REST Framework.
@@ -31,7 +32,7 @@ def import_auth(val):
         module = import_module(module_path)
         return getattr(module, class_name)
     except (ImportError, AttributeError) as e:
-        msg = "Could not import auth decorator '{}'. {}: {}.".format(
+        msg = "Could not import auth/permission class '{}'. {}: {}.".format(
             val,
             e.__class__.__name__,
             e)
@@ -47,7 +48,7 @@ def secure(view):
     Can also be 'django.contrib.admin.views.decorators.staff_member_required'
     or a custom decorator.
     """
-    auth_decorator = import_auth(settings.CHARTWERK_AUTH_DECORATOR)
+    auth_decorator = import_class(app_settings.AUTH_DECORATOR)
     return (
         view if settings.DEBUG
         else method_decorator(auth_decorator, name='dispatch')(view)
@@ -65,10 +66,9 @@ def build_context(context, request, chart_id='', template_id=''):
     context['chart_api'] = urlize('api/charts/')
     context['template_api'] = urlize('api/templates/')
     context['template_tags_api'] = urlize('api/template-property/')
-    context['oembed'] = urlize('api/oembed/') \
-        if settings.CHARTWERK_OEMBED else ''
-    context['embed_src'] = settings.CHARTWERK_EMBED_SCRIPT
-    context['color_schemes'] = json.dumps(settings.CHARTWERK_COLOR_SCHEMES)
+    context['oembed'] = app_settings.OEMBED
+    context['embed_src'] = app_settings.EMBED_SCRIPT
+    context['color_schemes'] = json.dumps(app_settings.COLOR_SCHEMES)
     return context
 
 
@@ -145,35 +145,34 @@ class JSONResponseMixin(object):
         return context
 
 
-class ChartViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class PermissionedModelViewSet(viewsets.ModelViewSet):
+    permission_classes = (import_class(app_settings.API_PERMISSION_CLASS),)
+
+
+class ChartViewSet(PermissionedModelViewSet):
     queryset = Chart.objects.all()
     serializer_class = ChartSerializer
     lookup_field = 'slug'
 
 
-class TemplateViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class TemplateViewSet(PermissionedModelViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
     lookup_field = 'slug'
 
 
-class TemplatePropertyViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class TemplatePropertyViewSet(PermissionedModelViewSet):
     pagination_class = None
     queryset = TemplateProperty.objects.all()
     serializer_class = TemplatePropertySerializer
 
 
-class FinderQuestionViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class FinderQuestionViewSet(PermissionedModelViewSet):
     queryset = FinderQuestion.objects.all()
     serializer_class = FinderQuestionSerializer
 
 
-class ChartEmbedViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class ChartEmbedViewSet(PermissionedModelViewSet):
     queryset = Chart.objects.all()
     serializer_class = ChartEmbedSerializer
     lookup_field = 'slug'
@@ -181,41 +180,34 @@ class ChartEmbedViewSet(viewsets.ModelViewSet):
 
 def oEmbed(request):
     """Return an oEmbed json response."""
-    def simple_string(split_string):
-        """Return a string stripped of extra whitespace."""
-        return ' '.join(split_string.split())
+    if 'url' not in request.GET or not request.GET.get('url'):
+        return HttpResponseBadRequest('url parameter is required.')
 
     url = request.GET.get('url')
     size = request.GET.get('size', 'double')
+
     path = urlparse(url).path
-    slug = resolve(path).kwargs['slug']
-    chart = get_object_or_404(Chart, slug=slug)
-    oembed = {
-        "version": "1.0",
-        "url": url,
-        "title": chart.title,
-        "provider_url": settings.CHARTWERK_DOMAIN,
-        "provider_name": "Chartwerk",
-        "author_name": chart.creator,
-        "chart_id": chart.slug,
-        "type": "rich",
-        "size": size,
-        "width": chart.embed_data['double']['width'] or "",
-        "height": chart.embed_data['double']['height'] or "",
-        "single_width": chart.embed_data['single']['width'] or "",
-        "single_height": chart.embed_data['single']['height'] or "",
-        "html": simple_string("""<div
-            class="chartwerk"
-            data-id="{}"
-            data-embed="{}"
-            data-size="{}"
-        ></div>
-        <script src='{}'></script>
-        """).format(
-            chart.slug,
-            json.dumps(chart.embed_data).replace('"', '&quot;'),
-            size,
-            settings.CHARTWERK_EMBED_SCRIPT,
+
+    try:
+        chart_kwargs = resolve(path).kwargs
+    except NoReverseMatch:
+        for pattern in getattr(
+                settings, 'CHARTWERK_OEMBED_EXTRA_PATTERNS', []):
+            chart_kwargs = re.search(pattern, path[1:])
+
+            if chart_kwargs is not None:
+                chart_kwargs = chart_kwargs.groupdict()
+                break
+
+    if chart_kwargs is None:
+        return HttpResponseNotFound(
+            '"%s" did not match any supported oEmbed URL patterns.' % url
         )
-    }
-    return JsonResponse(oembed)
+
+    try:
+        chart = Chart.objects.get(**chart_kwargs)
+        return JsonResponse(chart.oembed(size=size))
+    except Chart.DoesNotExist:
+        return HttpResponseNotFound(
+            'Chart matching "%s" not found.' % chart_kwargs
+        )
