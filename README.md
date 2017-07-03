@@ -1,4 +1,4 @@
-# ![chartwerk](docs/logo.png)
+# ![chartwerk](docs/images/logo.png)
 
 [![PyPI version](https://badge.fury.io/py/django-chartwerk.svg)](https://pypi.org/project/django-chartwerk/)
 [![PyPI](https://img.shields.io/pypi/status/django-chartwerk.svg)](https://pypi.org/project/django-chartwerk/)
