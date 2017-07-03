@@ -2,6 +2,9 @@
 django-chartwerk |release|
 ==========================
 
+.. image:: ./images/logo.png
+
+
 Chartwerk is an application for developing data visualizations and publishing them as embeddable, flat pages to Amazon S3.
 
 .. toctree::

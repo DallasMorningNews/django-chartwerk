@@ -22,7 +22,7 @@ Then run the build process using gulp:
 
 
 
-Updating :code:`chartwerk-editor`
+Updating chartwerk-editor
 ---------------------------------
 
 Chartwerk-editor includes a script to move compiled assets from the app into the :code:`static` directory of django-chartwerk. First, upgrade chartwerk-editor from the :code:`staticapp` directory.
