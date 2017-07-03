@@ -191,8 +191,7 @@ def oEmbed(request):
     try:
         chart_kwargs = resolve(path).kwargs
     except NoReverseMatch:
-        for pattern in getattr(
-                settings, 'CHARTWERK_OEMBED_EXTRA_PATTERNS', []):
+        for pattern in app_settings.OEMBED_EXTRA_PATTERNS:
             chart_kwargs = re.search(pattern, path[1:])
 
             if chart_kwargs is not None:

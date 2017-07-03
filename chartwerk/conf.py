@@ -64,6 +64,9 @@ variable. Set it in your project settings.')
 
 Settings.OEMBED = getattr(project_settings, 'CHARTWERK_OEMBED', False)
 
+Settings.OEMBED_EXTRA_PATTERNS = getattr(
+    project_settings, 'CHARTWERK_OEMBED_EXTRA_PATTERNS', [])
+
 Settings.AWS_PATH = getattr(project_settings, 'CHARTWERK_AWS_PATH', 'charts')
 
 Settings.CACHE_HEADER = getattr(
