@@ -106,7 +106,7 @@ AWS S3 bucket name to publish charts to. **Required.**
 :code:`CHARTWERK_AWS_PATH`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Path within your S3 bucket to append to object keys before publishing.
+Path within your S3 bucket to append to your charts when publishing. For example, setting to :code:`chartwerk/charts` would result in charts published to :code:`chartwerk/charts/<chart_id>.html` in your bucket.
 
 :code:`CHARTWERK_CACHE_HEADER`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -117,17 +117,67 @@ Cache header to add to chart files when published to S3.
 :code:`CHARTWERK_DOMAIN`
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The domain of the app running Chartwerk. For example, your app may be hosted at `http://myapp.mydomain.com`.
+The domain of the app running Chartwerk. For example, your app may be hosted at :code:`http://myapp.mydomain.com`.
 
 :code:`CHARTWERK_EMBED_SCRIPT`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Absolute URL to your custom script for embedding Chartwerk charts in your CMS.
+Absolute URL to a custom script for embedding Chartwerk charts in your CMS.
+
+This script is used on the parent page – i.e., the page in your CMS you're embedding a chart into – to select the appropriately sized child page to embed.
+
+While we require you to specify your own embed script, we also include one that will handle most implementations. You can reference it from the static files directory of this app at :code:`chartwerk/js/embed_v1.js`.
+
+.. note::
+
+  While you can reference this script from the app, we recommend that you host the file in your AWS bucket. Every embed will call this script, meaning your app would need to handle the traffic of all your charts.
+
+
+For reference, this is the code:
+
+
+.. code-block:: javascript
+
+  (function(){
+      var werks = document.querySelectorAll(".chartwerk");
+      for (var i = 0; i < werks.length; i++) {
+          var werk = werks[i],
+              id = werk.dataset.id,
+              dimensions = JSON.parse(werk.dataset.embed),
+              size = werk.dataset.size,
+              screen = werk.parentElement.clientWidth;
+          // Check if iframe already embedded. (Handles for multiple embedded charts...)
+          if (werk.querySelectorAll('iframe').length < 1) {
+              var iframe = document.createElement("iframe");
+              iframe.setAttribute("scrolling", "no");
+              iframe.setAttribute("frameborder", "0");
+              // double-wide
+              if (size === 'double') {
+                  if (screen > dimensions.double.width) {
+                      iframe.setAttribute("src", "http://yoursite.com/chartwerk/"+id+".html");
+                      iframe.setAttribute("height", dimensions.double.height);
+                      iframe.setAttribute("width", "100%");
+                  } else {
+                      iframe.setAttribute("src", "http://yoursite.com/chartwerk/"+id+"_single.html");
+                      iframe.setAttribute("height", dimensions.single.height);
+                      iframe.setAttribute("width", dimensions.single.width);
+                  }
+              // single-wide
+              } else {
+                  iframe.setAttribute("src", "http://yoursite.com/chartwerk/"+id+"_single.html");
+                  iframe.setAttribute("height", dimensions.single.height);
+                  iframe.setAttribute("width", dimensions.single.width);
+              }
+              werk.appendChild(iframe);
+          }
+      }
+  })();
 
 :code:`CHARTWERK_JQUERY`
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-URL to jQuery version you want to include in baked-out charts.
+Baked charts require jQuery in the `client bundle script <https://the-dallas-morning-news.gitbooks.io/chartwerk-editor/content/docs/embedding.html#child-embed-script>`_. By default, this is set to jQuery's `slim version <https://code.jquery.com/>`_, but you can set this to whatever version you want.
+
 
 
 

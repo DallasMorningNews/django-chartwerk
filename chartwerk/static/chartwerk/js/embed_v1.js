@@ -11,7 +11,7 @@
             var iframe = document.createElement("iframe");
             iframe.setAttribute("scrolling", "no");
             iframe.setAttribute("frameborder", "0");
-            // desktop
+            // double-wide
             if (size === 'double') {
                 if (screen > dimensions.double.width) {
                     iframe.setAttribute("src", "http://interactives.dallasnews.com/chartwerk/2.0/"+id+".html");
@@ -22,7 +22,7 @@
                     iframe.setAttribute("height", dimensions.single.height);
                     iframe.setAttribute("width", dimensions.single.width);
                 }
-            // mobile
+            // single-wide
             } else {
                 iframe.setAttribute("src", "http://interactives.dallasnews.com/chartwerk/2.0/"+id+"_single.html");
                 iframe.setAttribute("height", dimensions.single.height);

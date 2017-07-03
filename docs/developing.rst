@@ -42,7 +42,8 @@ Then run the script from chartwerk-editor's bin directory.
   This will overwrite chartwerk-editor templates and static files in django-chartwerk, replacing any customizations you may have made with the latest from chartwerk-editor.
 
 
-Planned featuers
+
+Planned features
 ----------------
 
 Django-chartwerk includes some models which anticipate future features.
