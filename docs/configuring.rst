@@ -88,39 +88,29 @@ AWS
   CHARTWERK_EMBED_SCRIPT = None  # Required
   CHARTWERK_JQUERY = "https://code.jquery.com/jquery-3.2.1.slim.min.js"
 
-:code:`CHARTWERK_AWS_ACCESS_KEY_ID`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+:code:`CHARTWERK_AWS_ACCESS_KEY_ID` **(Required)**
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Amazon Web Services access key ID. **Required.**
+Amazon Web Services access key ID.
 
-:code:`CHARTWERK_AWS_SECRET_ACCESS_KEY`
+:code:`CHARTWERK_AWS_SECRET_ACCESS_KEY` **(Required)**
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+AWS secret access key.
+
+:code:`CHARTWERK_AWS_BUCKET` **(Required)**
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+AWS S3 bucket name to publish charts to.
+
+
+:code:`CHARTWERK_DOMAIN` **(Required)**
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-AWS secret access key. **Required.**
-
-:code:`CHARTWERK_AWS_BUCKET`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-AWS S3 bucket name to publish charts to. **Required.**
-
-:code:`CHARTWERK_AWS_PATH`
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Path within your S3 bucket to append to your charts when publishing. For example, setting to :code:`chartwerk/charts` would result in charts published to :code:`chartwerk/charts/<chart_id>.html` in your bucket.
-
-:code:`CHARTWERK_CACHE_HEADER`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Cache header to add to chart files when published to S3.
-
-
-:code:`CHARTWERK_DOMAIN`
-^^^^^^^^^^^^^^^^^^^^^^^^
 
 The domain of the app running Chartwerk. For example, your app may be hosted at :code:`http://myapp.mydomain.com`.
 
-:code:`CHARTWERK_EMBED_SCRIPT`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+:code:`CHARTWERK_EMBED_SCRIPT` **(Required)**
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Absolute URL to a custom script for embedding Chartwerk charts in your CMS.
 
@@ -172,6 +162,16 @@ For reference, this is the code:
           }
       }
   })();
+
+:code:`CHARTWERK_AWS_PATH`
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Path within your S3 bucket to append to your charts when publishing. For example, setting to :code:`chartwerk/charts` would result in charts published to :code:`chartwerk/charts/<chart_id>.html` in your bucket.
+
+:code:`CHARTWERK_CACHE_HEADER`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Cache header to add to chart files when published to S3.
 
 :code:`CHARTWERK_JQUERY`
 ^^^^^^^^^^^^^^^^^^^^^^^^
