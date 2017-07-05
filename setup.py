@@ -1,12 +1,11 @@
 # Imports from standard libraries.  # NOQA
 import os
-from setuptools import find_packages
-from setuptools import setup
 
+from setuptools import find_packages, setup
 
 REPO_URL = 'https://github.com/DallasMorningNews/django-chartwerk/'
 
-PYPI_VERSION = '0.3.0'
+PYPI_VERSION = '0.4.0'
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
@@ -19,19 +18,18 @@ setup(
     version=PYPI_VERSION,
     packages=find_packages(),
     include_package_data=True,
-    license='ISC',
-    description=' '.join([
-        'A Django-based application to',
-        'manage, create and share Chartwerk charts.'
-    ]),
+    license='BSD 3-clause',
+    description="""A Django application to manage, create and
+share Chartwerk charts.
+""",
     long_description=README,
     url=REPO_URL,
     download_url='{repo_url}archive/{version}.tar.gz'.format(**{
         'repo_url': REPO_URL,
         'version': PYPI_VERSION,
     }),
-    author='Jon McClure and The Dallas Morning News',
-    author_email='jon.r.mcclure@gmail.com, newsapps@dallasnews.com',
+    author='Jon McClure',
+    author_email='jon.r.mcclure@gmail.com',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',

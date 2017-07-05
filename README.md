@@ -5,7 +5,7 @@
 [![Requirements Status](https://img.shields.io/requires/github/DallasMorningNews/django-chartwerk.svg?maxAge=2592000)](https://requires.io/github/DallasMorningNews/django-chartwerk/requirements/?branch=master)
 
 
-A Django-based application to manage, create and share Chartwerk charts, built with [Django REST framework](http://www.django-rest-framework.org/).
+A Django application to manage, create and share Chartwerk charts, built with [Django REST framework](http://www.django-rest-framework.org/).
 
 For the React/Redux-based chart editor, see [chartwerk-editor](https://github.com/DallasMorningNews/chartwerk-editor).
 
