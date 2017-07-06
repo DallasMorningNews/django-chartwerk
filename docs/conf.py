@@ -51,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-chartwerk'
-copyright = u'2017, Jon McClure'
+copyright = u'2017, The Dallas Morning News'
 author = u'Jon McClure'
 
 # The version info for the project you're documenting, acts as replacement for

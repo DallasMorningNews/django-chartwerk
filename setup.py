@@ -18,7 +18,7 @@ setup(
     version=PYPI_VERSION,
     packages=find_packages(),
     include_package_data=True,
-    license='BSD 3-clause',
+    license='AGPLv3',
     description="""A Django application to manage, create and
 share Chartwerk charts.
 """,
