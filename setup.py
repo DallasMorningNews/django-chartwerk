@@ -5,7 +5,7 @@ from setuptools import find_packages, setup
 
 REPO_URL = 'https://github.com/DallasMorningNews/django-chartwerk/'
 
-PYPI_VERSION = '0.4.0'
+PYPI_VERSION = '0.4.1'
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
@@ -19,17 +19,17 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     license='AGPLv3',
-    description="""A Django application to manage, create and
-share Chartwerk charts.
-""",
+    description=(
+        'A Django application to manage, create and share Chartwerk charts.'
+    ),
     long_description=README,
     url=REPO_URL,
     download_url='{repo_url}archive/{version}.tar.gz'.format(**{
         'repo_url': REPO_URL,
         'version': PYPI_VERSION,
     }),
-    author='Jon McClure',
-    author_email='jon.r.mcclure@gmail.com',
+    author='Jon McClure / The Dallas Morning News',
+    author_email='newsapps@dallasnews.com',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
