@@ -14,7 +14,7 @@ Developers
 Thanks
 ------
 
-Thanks also to these folks who've encouraged or advised development of this project:
+Thanks also to these folks who've encouraged or advised development of this project in ways great and small:
 
 - Daniel Lathrop
 - Dave Hiott

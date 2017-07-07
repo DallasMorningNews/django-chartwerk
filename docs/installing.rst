@@ -7,11 +7,11 @@ Assumptions
 
 1. django-chartwerk is written to save charts to Amazon Web Service's Simple Storage Service (S3). We assume that's your plan, too.
 
-2. django-chartwerk uses Django's `JSONField <https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield>`_ field, therefore, the app requires a PostgreSQL database.
+2. django-chartwerk uses Django's `JSONField <https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield>`_ field, therefore, the app **requires** a PostgreSQL database.
 
 .. note::
 
-  If you're not already using PostgreSQL in a project you'd like to add django-chartwerk to, you can separate django-chartwerk's database from your default database by using a custom router, as `outlined in the Django documentation <https://docs.djangoproject.com/en/1.11/topics/db/multi-db/#automatic-database-routing>`_.
+  If you're not already using PostgreSQL in a project you'd like to add django-chartwerk to, you can separate django-chartwerk's database from your default database by using a custom router, as `outlined in the Django documentation <https://docs.djangoproject.com/en/1.11/topics/db/multi-db/#automatic-database-routing>`_. See "`Using a database router`_" for an example.
 
 
 
@@ -95,3 +95,62 @@ Quickstart
 
   $ python manage.py migrate chartwerk
   $ python manage.py runserver
+
+
+Using a database router
+-----------------------
+
+If you'd like to separate django-chartwerk's PostgreSQL database from the database(s) used in the rest of your Django project, you can write and connect a router.
+
+For example:
+
+.. code-block:: python
+
+  # project/routers.py
+  class ChartwerkRouter(object):
+    def db_for_read(self, model, **hints):
+      if model._meta.app_label == 'chartwerk':
+        return 'chartwerk'
+      else:
+        return 'default'
+
+    def db_for_write(self, model, **hints):
+      if model._meta.app_label == 'chartwerk':
+        return 'chartwerk'
+      else:
+        return 'default'
+
+    def allow_relation(self, obj1, obj2, **hints):
+      if obj1._meta.app_label == 'chartwerk' or obj2._meta.app_label == 'chartwerk':
+        return True
+      return None
+
+    def allow_migrate(self, db, model):
+      if db == 'chartwerk':
+        return model._meta.app_label == 'chartwerk'
+      elif model._meta.app_label == 'chartwerk':
+        return False
+      return None
+
+Add your router and database in settings.
+
+.. code-block:: python
+
+  # project/settings.py
+  import dj_database_url
+
+  # Add chartwerk DB to existing DB settings
+  DATABASES['chartwerk'] = dj_database_url.parse('postgres://...')
+  DATABASE_ROUTERS.append('routers.ChartwerkRouter')
+
+When you separate django-chartwerk's database, you must specify the database explicitly when running migrations to create models.
+
+.. code::
+
+  $ python manage.py migrate chartwerk --database chartwerk
+
+After running initial migrations, you'll also need to manually load fixtures to get django-chartwerk's free templates.
+
+.. code::
+
+  $ python manage.py loaddata free_templates --database chartwerk
