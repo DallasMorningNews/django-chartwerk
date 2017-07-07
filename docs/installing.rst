@@ -141,7 +141,9 @@ Add your router and database in settings.
 
   # Add chartwerk DB to existing DB settings
   DATABASES['chartwerk'] = dj_database_url.parse('postgres://...')
-  DATABASE_ROUTERS.append('project.routers.ChartwerkRouter')
+  DATABASE_ROUTERS = [
+    'project.routers.ChartwerkRouter',
+  ]
 
 When you separate django-chartwerk's database, you must specify the database explicitly when running migrations to create models.
 
