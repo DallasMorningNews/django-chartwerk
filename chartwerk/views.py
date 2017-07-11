@@ -59,7 +59,7 @@ def build_context(context, request, chart_id='', template_id=''):
     """Build context object to pass to the chartwerk editor."""
     def urlize(path):
         uri = os.path.join(reverse('chartwerk_home'), path)
-        return '//{}{}'.format(request.get_host(), uri)
+        return '{}://{}{}'.format(request.scheme, request.get_host(), uri)
     context['user'] = request.user.username or 'DEBUGGER'
     context['chart_id'] = chart_id
     context['template_id'] = template_id
