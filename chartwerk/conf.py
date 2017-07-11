@@ -84,10 +84,16 @@ Settings.AUTH_DECORATOR = getattr(
         'django.contrib.auth.decorators.login_required'
     )
 
-Settings.API_PERMISSION_CLASS = getattr(
+Settings.API_AUTHENTICATION_CLASSES = getattr(
         project_settings,
-        'CHARTWERK_API_PERMISSION_CLASS',
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+        'CHARTWERK_API_AUTHENTICATION_CLASSES',
+        ('rest_framework.authentication.SessionAuthentication',)
+    )
+
+Settings.API_PERMISSION_CLASSES = getattr(
+        project_settings,
+        'CHARTWERK_API_PERMISSION_CLASSES',
+        ('rest_framework.permissions.IsAuthenticatedOrReadOnly',)
     )
 
 Settings.COLOR_SCHEMES = getattr(
