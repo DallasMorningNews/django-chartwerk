@@ -27,14 +27,14 @@ String module path to a decorator that should be applied to Chartwerk views to a
   This decorator is not applied to views if DEBUG is :code:`True` in your settings.
 
 :code:`CHARTWERK_API_AUTHENTICATION_CLASSES`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Iterable of string module paths to valid Django REST authentication classes that should be applied to Django REST Framework's browsable API viewsets.
+Iterable of string module paths to valid Django REST `authentication <http://www.django-rest-framework.org/api-guide/authentication/>`_ classes that should be applied to Django REST Framework's browsable API viewsets.
 
 :code:`CHARTWERK_API_PERMISSION_CLASSES`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Iterable of string module paths to valid Django REST permission classes that should be applied to Django REST Framework's browsable API viewsets.
+Iterable of string module paths to valid Django REST `permission <http://www.django-rest-framework.org/api-guide/permissions/>`_ classes that should be applied to Django REST Framework's browsable API viewsets.
 
 :code:`CHARTWERK_COLOR_SCHEMES`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
