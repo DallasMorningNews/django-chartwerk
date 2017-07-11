@@ -145,34 +145,41 @@ class JSONResponseMixin(object):
         return context
 
 
-class PermissionedModelViewSet(viewsets.ModelViewSet):
-    permission_classes = (import_class(app_settings.API_PERMISSION_CLASS),)
+class CustomModelViewSet(viewsets.ModelViewSet):
+    permission_classes = tuple(
+        import_class(permission) for permission in
+        app_settings.API_PERMISSION_CLASSES
+    )
+    authentication_classes = tuple(
+        import_class(auth) for auth in
+        app_settings.API_AUTHENTICATION_CLASSES
+    )
 
 
-class ChartViewSet(PermissionedModelViewSet):
+class ChartViewSet(CustomModelViewSet):
     queryset = Chart.objects.all()
     serializer_class = ChartSerializer
     lookup_field = 'slug'
 
 
-class TemplateViewSet(PermissionedModelViewSet):
+class TemplateViewSet(CustomModelViewSet):
     queryset = Template.objects.all()
     serializer_class = TemplateSerializer
     lookup_field = 'slug'
 
 
-class TemplatePropertyViewSet(PermissionedModelViewSet):
+class TemplatePropertyViewSet(CustomModelViewSet):
     pagination_class = None
     queryset = TemplateProperty.objects.all()
     serializer_class = TemplatePropertySerializer
 
 
-class FinderQuestionViewSet(PermissionedModelViewSet):
+class FinderQuestionViewSet(CustomModelViewSet):
     queryset = FinderQuestion.objects.all()
     serializer_class = FinderQuestionSerializer
 
 
-class ChartEmbedViewSet(PermissionedModelViewSet):
+class ChartEmbedViewSet(CustomModelViewSet):
     queryset = Chart.objects.all()
     serializer_class = ChartEmbedSerializer
     lookup_field = 'slug'

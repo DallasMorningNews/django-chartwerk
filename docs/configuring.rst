@@ -13,7 +13,8 @@ App settings
   :caption: Default settings
 
   CHARTWERK_AUTH_DECORATOR = "django.contrib.auth.decorators.login_required"
-  CHARTWERK_API_PERMISSION_CLASS = "rest_framework.permissions.IsAuthenticatedOrReadOnly"
+  CHARTWERK_API_AUTHENTICATION_CLASSES = ("rest_framework.authentication.SessionAuthentication",)
+  CHARTWERK_API_PERMISSION_CLASSES = ("rest_framework.permissions.IsAuthenticatedOrReadOnly",)
   CHARTWERK_COLOR_SCHEMES = {} # Uses default color scheme in chartwerk-editor
 
 :code:`CHARTWERK_AUTH_DECORATOR`
@@ -25,10 +26,15 @@ String module path to a decorator that should be applied to Chartwerk views to a
 
   This decorator is not applied to views if DEBUG is :code:`True` in your settings.
 
-:code:`CHARTWERK_API_PERMISSION_CLASS`
+:code:`CHARTWERK_API_AUTHENTICATION_CLASSES`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-String module path to a valid Django REST permission class that should be applied to Django REST Framework's browsable API viewsets.
+Iterable of string module paths to valid Django REST authentication classes that should be applied to Django REST Framework's browsable API viewsets.
+
+:code:`CHARTWERK_API_PERMISSION_CLASSES`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Iterable of string module paths to valid Django REST permission classes that should be applied to Django REST Framework's browsable API viewsets.
 
 :code:`CHARTWERK_COLOR_SCHEMES`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
