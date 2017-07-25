@@ -41,7 +41,6 @@ Quickstart
   ]
 
   CHARTWERK_DOMAIN = 'https://yourapp.com'
-  CHARTWERK_EMBED_SCRIPT = 'https://yourapp.com/static/wherever/js/embed_v1.js'
   CHARTWERK_AWS_BUCKET = 'chartwerk'
   CHARTWERK_AWS_ACCESS_KEY_ID = 'YOUR_ACCESS_KEY'
   CHARTWERK_AWS_SECRET_ACCESS_KEY = 'YOUR_SECRET_KEY'
