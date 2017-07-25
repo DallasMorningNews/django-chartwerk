@@ -5,6 +5,8 @@ Some settings are required and raise errors if not set.
 Other settings have defaults. Optional settigns default to None.
 """
 
+import json
+import os
 
 from django.conf import settings as project_settings
 
@@ -28,13 +30,6 @@ Settings.DOMAIN = getattr(project_settings, 'CHARTWERK_DOMAIN', None)
 
 if not Settings.DOMAIN:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_DOMAIN \
-variable. Set it in your project settings.')
-
-Settings.EMBED_SCRIPT = getattr(
-    project_settings, 'CHARTWERK_EMBED_SCRIPT', None)
-
-if not Settings.EMBED_SCRIPT:
-    raise ChartwerkConfigError('You haven\'t set the CHARTWERK_EMBED_SCRIPT \
 variable. Set it in your project settings.')
 
 Settings.AWS_BUCKET = getattr(project_settings, 'CHARTWERK_AWS_BUCKET', None)
@@ -61,6 +56,32 @@ variable. Set it in your project settings.')
 ########################
 # SETTINGS W/ DEFAULTS #
 ########################
+
+DEFAULT_TEMPLATE_PATH = os.path.join(
+    os.path.dirname(__file__),
+    'templates/chartwerk/embed.html'
+)
+with open(DEFAULT_TEMPLATE_PATH, 'r') as template_file:
+    DEFAULT_TEMPLATE = template_file.read()
+
+Settings.EMBED_TEMPLATE = getattr(
+    project_settings,
+    'CHARTWERK_EMBED_TEMPLATE',
+    DEFAULT_TEMPLATE
+)
+
+EMBED_TEMPLATE_CONTEXT = getattr(
+    project_settings, 'CHARTWERK_EMBED_TEMPLATE_CONTEXT',
+    lambda chart: {
+        'embed_sizes': json.dumps(chart.embed_data).replace('"', '&quot;'),
+        'chart_path': 'http://www.somesite.com/path/to/charts/',
+    }
+)
+if not callable(EMBED_TEMPLATE_CONTEXT):
+    raise ChartwerkConfigError('CHARTWERK_EMBED_TEMPLATE_CONTEXT must be a \
+function that accepts one parameter, the chart object.')
+
+Settings.EMBED_TEMPLATE_CONTEXT = EMBED_TEMPLATE_CONTEXT
 
 Settings.OEMBED = getattr(project_settings, 'CHARTWERK_OEMBED', False)
 

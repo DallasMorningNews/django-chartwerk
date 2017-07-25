@@ -1,6 +1,6 @@
-from chartwerk.views import (Browse, ChartDetail, ChartViewSet,
-                             FinderQuestionViewSet, Home, MyWerk, Start,
-                             TemplateDetail, TemplatePropertyViewSet,
+from chartwerk.views import (Browse, ChartDetail, ChartEmbedViewSet,
+                             ChartViewSet, FinderQuestionViewSet, Home, MyWerk,
+                             Start, TemplateDetail, TemplatePropertyViewSet,
                              TemplateViewSet, oEmbed)
 from django.conf.urls import include, url
 from rest_framework import routers
@@ -8,6 +8,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'charts', ChartViewSet)
 router.register(r'templates', TemplateViewSet)
+router.register(r'embeds', ChartEmbedViewSet)
 router.register(r'finder-question', FinderQuestionViewSet)
 router.register(r'template-property', TemplatePropertyViewSet)
 
