@@ -41,7 +41,6 @@ Quickstart
   ]
 
   CHARTWERK_DOMAIN = 'https://yourapp.com'
-  CHARTWERK_EMBED_SCRIPT = 'https://yourapp.com/static/wherever/js/embed_v1.js'
   CHARTWERK_AWS_BUCKET = 'chartwerk'
   CHARTWERK_AWS_ACCESS_KEY_ID = 'YOUR_ACCESS_KEY'
   CHARTWERK_AWS_SECRET_ACCESS_KEY = 'YOUR_SECRET_KEY'
@@ -96,6 +95,12 @@ Quickstart
   $ python manage.py migrate chartwerk
   $ python manage.py runserver
 
+
+.. note::
+
+  The default permissions setting for Chartwerk's backend requires that users are authenticated. So in a new project with :code:`DEBUG = true`, an unauthenticated user can access the Editor, but she cannot save a chart to the backend (403 error).
+
+  For new projects, then, be sure to `create a user account <https://docs.djangoproject.com/en/1.11/intro/tutorial02/#creating-an-admin-user>`_ and login before trying to save charts.
 
 Using a database router
 -----------------------

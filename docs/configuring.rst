@@ -16,6 +16,7 @@ App settings
   CHARTWERK_API_AUTHENTICATION_CLASSES = ("rest_framework.authentication.SessionAuthentication",)
   CHARTWERK_API_PERMISSION_CLASSES = ("rest_framework.permissions.IsAuthenticatedOrReadOnly",)
   CHARTWERK_COLOR_SCHEMES = {} # Uses default color scheme in chartwerk-editor
+  CHARTWERK_JQUERY = "https://code.jquery.com/jquery-3.2.1.slim.min.js"
 
 :code:`CHARTWERK_AUTH_DECORATOR`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -78,6 +79,13 @@ Set this variable in your project settings to declare a default set of color sch
 
   You should specify a :code:`default` color scheme under the :code:`categorical` key. You can name all other schemes whatever you want.
 
+:code:`CHARTWERK_JQUERY`
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Baked charts require jQuery in the `client bundle script <https://the-dallas-morning-news.gitbooks.io/chartwerk-editor/content/docs/embedding.html#child-embed-script>`_. By default, this is set to jQuery's `slim version <https://code.jquery.com/>`_, but you can set this to whatever version you want.
+
+
+
 
 AWS
 ---
@@ -91,8 +99,6 @@ AWS
   CHARTWERK_AWS_PATH = "charts"
   CHARTWERK_CACHE_HEADER = "max-age=300"
   CHARTWERK_DOMAIN = None  # Required
-  CHARTWERK_EMBED_SCRIPT = None  # Required
-  CHARTWERK_JQUERY = "https://code.jquery.com/jquery-3.2.1.slim.min.js"
 
 :code:`CHARTWERK_AWS_ACCESS_KEY_ID` **(Required)**
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -115,60 +121,6 @@ AWS S3 bucket name to publish charts to.
 
 The domain of the app running Chartwerk. For example, your app may be hosted at :code:`http://myapp.mydomain.com`.
 
-:code:`CHARTWERK_EMBED_SCRIPT` **(Required)**
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Absolute URL to a custom script for embedding Chartwerk charts in your CMS.
-
-This script is used on the parent page – i.e., the page in your CMS you're embedding a chart into – to select the appropriately sized child page to embed.
-
-While we require you to specify your own embed script, we also include one that will handle most implementations. You can reference it from the static files directory of this app at :code:`chartwerk/js/embed_v1.js`.
-
-.. note::
-
-  While you can reference this script from the app, we recommend that you host the file in your AWS bucket. Every embed will call this script, meaning your app would need to handle the traffic of all your charts.
-
-
-For reference, this is the code:
-
-
-.. code-block:: javascript
-
-  (function(){
-      var werks = document.querySelectorAll(".chartwerk");
-      for (var i = 0; i < werks.length; i++) {
-          var werk = werks[i],
-              id = werk.dataset.id,
-              dimensions = JSON.parse(werk.dataset.embed),
-              size = werk.dataset.size,
-              screen = werk.parentElement.clientWidth;
-          // Check if iframe already embedded. (Handles for multiple embedded charts...)
-          if (werk.querySelectorAll('iframe').length < 1) {
-              var iframe = document.createElement("iframe");
-              iframe.setAttribute("scrolling", "no");
-              iframe.setAttribute("frameborder", "0");
-              // double-wide
-              if (size === 'double') {
-                  if (screen > dimensions.double.width) {
-                      iframe.setAttribute("src", "http://yoursite.com/chartwerk/"+id+".html");
-                      iframe.setAttribute("height", dimensions.double.height);
-                      iframe.setAttribute("width", "100%");
-                  } else {
-                      iframe.setAttribute("src", "http://yoursite.com/chartwerk/"+id+"_single.html");
-                      iframe.setAttribute("height", dimensions.single.height);
-                      iframe.setAttribute("width", dimensions.single.width);
-                  }
-              // single-wide
-              } else {
-                  iframe.setAttribute("src", "http://yoursite.com/chartwerk/"+id+"_single.html");
-                  iframe.setAttribute("height", dimensions.single.height);
-                  iframe.setAttribute("width", dimensions.single.width);
-              }
-              werk.appendChild(iframe);
-          }
-      }
-  })();
-
 :code:`CHARTWERK_AWS_PATH`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -178,13 +130,6 @@ Path within your S3 bucket to append to your charts when publishing. For example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Cache header to add to chart files when published to S3.
-
-:code:`CHARTWERK_JQUERY`
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-Baked charts require jQuery in the `client bundle script <https://the-dallas-morning-news.gitbooks.io/chartwerk-editor/content/docs/embedding.html#child-embed-script>`_. By default, this is set to jQuery's `slim version <https://code.jquery.com/>`_, but you can set this to whatever version you want.
-
-
 
 
 GitHub
@@ -289,3 +234,134 @@ If you'd like the oEmbed endpoint to support any additional URL patterns, provid
   CHARTWERK_OEMBED_EXTRA_PATTERNS = (
     r'^old-chartwerk/chart/(?P<slug>[-\w]+)/$',
   )
+
+
+Embed code
+----------
+
+These settings configure the code used to embed your charts in a page. The code is either returned to your users directly in the Editor or sent as part of the oEmbed response object, if oEmbed is configured.
+
+The embed code is responsible for injecting an iframe into a page, setting its source to either the single or double-wide chart and, usually, setting its height, width, margins and float styles.
+
+By templatizing the embed code, django-chartwerk gives you the freedom to write exactly the code you need for your CMS. The settings consist of a template string, which you can write to include any arbitrary HTML, CSS, or JavaScript, and a context object that allows you to render your tempate with context from a chart instance.
+
+
+.. note::
+
+  These aren't required settings, but the defaults will be generally useless without changing the reference to the AWS bucket where you host your saved charts. At minimum, you should change :code:`CHARTWERK_EMBED_TEMPLATE_CONTEXT` to return the correct context.
+
+.. code-block:: python
+  :caption: Default settings
+
+  CHARTWERK_EMBED_TEMPLATE = """
+  <div
+    class="chartwerk"
+    data-id="{{id}}"
+    data-dimensions="{{dimensions}}"
+    data-size="{{size}}"
+  ></div>
+  <script>
+  !function(){for(var t=document.querySelectorAll(".chartwerk"),e=0;e<t.length;e++){var r=t[e],i=r.dataset.id,h=JSON.parse(r.dataset.dimensions),l=r.dataset.size,a=r.parentElement.clientWidth;if(r.querySelectorAll("iframe").length<1){var s=document.createElement("iframe");s.setAttribute("scrolling","no"),s.setAttribute("frameborder","0"),"double"===l&&a>h.double.width?(s.setAttribute("src","{{chart_path}}"+i+".html"),s.setAttribute("height",h.double.height),s.setAttribute("width","100%")):(s.setAttribute("src","{{chart_path}}"+i+"_single.html"),s.setAttribute("height",h.single.height),s.setAttribute("width",h.single.width)),r.appendChild(s)}}}();
+  </script>
+  """
+
+  CHARTWERK_EMBED_TEMPLATE_CONTEXT = lambda chart: {
+      'chart_path': 'http://www.somesite.com/path/to/charts/',
+  }
+
+:code:`CHARTWERK_EMBED_TEMPLATE`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A template string which will be rendered with context as the embed code returned to your users. The template will be rendered using the syntax of the `template engine <https://docs.djangoproject.com/en/1.11/topics/templates/#support-for-template-engines>`_ you specify in your project settings.
+
+:code:`CHARTWERK_EMBED_TEMPLATE_CONTEXT`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A function which takes one parameter, a chart instance, and returns a dictionary to use as context when rendering your template string. Any extra context you set is added to three default context items:
+
+- :code:`id` - the chart slug
+- :code:`size` - the preferred chart size specified by the user
+- :code:`dimensions` - stringified, escaped JSON object specifying the pixel dimensions of both chart sizes
+
+Tips for configuring your embed code
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+While these settings give you room to completely customize your embed code, in most cases, you can easily use Chartwerk's default embed template by simply setting the :code:`chart_path` template context to the path where your charts are saved.
+
+.. code-block:: python
+
+  CHARTWERK_EMBED_TEMPLATE_CONTEXT = lambda chart: {
+      'chart_path': 'http://www.yourawsbucket.com/path/to/your/charts/',
+  }
+
+When writing your own template string, remember that Chartwerk adds three additional pieces of context: the slug of the chart, the preferred size of the embed specified by the user and the dimensions of each chart size.
+
+The :code:`id` is the chart slug used to save the chart file to your S3 bucket, either :code:`<slug>.html` or :code:`<slug>_single.html`, for double and single-wide, respectively.
+
+The :code:`size` is either :code:`double` or :code:`single`.
+
+The :code:`dimensions` are a stringified JSON object specifying the height and width of both chart dimensions. You can parse it into an object and use it to set the correct dimensions of your iframe.
+
+.. code-block:: javascript
+
+  // Assuming an templated element like:
+  // <div data-dimensions="{{dimensions}}"></div>
+  var dimensions = JSON.parse(<element>.dataset.embed);
+
+  // dimensions will be an object like:
+  {
+    double: {
+      width: 500,
+      height: 300,
+    },
+    single: {
+      width: 290,
+      height: 240,
+    },
+  }
+
+You can add any additional properties from your chart as template context.
+
+Remember, that your embed template must include the scripts used to inject, configure and style the iframe on your page. For your reference, here is the script used in the default embed template, which uses the template context item :code:`chart_path` to reference your charts in S3:
+
+.. code-block:: javascript
+
+  (function(){
+    var werks = document.querySelectorAll(".chartwerk");
+    for (var i = 0; i < werks.length; i++) {
+        var werk = werks[i],
+            // Get ID
+            id = werk.dataset.id,
+            // Parse embed dimensions object
+            dimensions = JSON.parse(werk.dataset.dimensions),
+            // Get the preferred embed size
+            size = werk.dataset.size,
+            screen = werk.parentElement.clientWidth;
+        // Check if iframe already embedded. (Handles for multiple embedded charts...)
+        if (werk.querySelectorAll('iframe').length < 1) {
+            var iframe = document.createElement("iframe");
+            iframe.setAttribute("scrolling", "no");
+            iframe.setAttribute("frameborder", "0");
+            // double-wide
+            if (size === 'double') {
+                if (screen > dimensions.double.width) {
+                    iframe.setAttribute("src", "{{chart_path}}"+id+".html");
+                    iframe.setAttribute("height", dimensions.double.height);
+                    iframe.setAttribute("width", "100%");
+                } else {
+                    iframe.setAttribute("src", "{{chart_path}}"+id+"_single.html");
+                    iframe.setAttribute("height", dimensions.single.height);
+                    iframe.setAttribute("width", dimensions.single.width);
+                }
+            // single-wide
+            } else {
+                iframe.setAttribute("src", "{{chart_path}}"+id+"_single.html");
+                iframe.setAttribute("height", dimensions.single.height);
+                iframe.setAttribute("width", dimensions.single.width);
+            }
+            werk.appendChild(iframe);
+        }
+    }
+  })();
+
+Of course, you can host the script separately from the embed template and simply reference it through a script tag.

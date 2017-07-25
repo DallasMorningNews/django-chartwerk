@@ -65,9 +65,9 @@ def build_context(context, request, chart_id='', template_id=''):
     context['template_id'] = template_id
     context['chart_api'] = urlize('api/charts/')
     context['template_api'] = urlize('api/templates/')
+    context['embed_api'] = urlize('api/embeds/')
     context['template_tags_api'] = urlize('api/template-property/')
     context['oembed'] = app_settings.OEMBED
-    context['embed_src'] = app_settings.EMBED_SCRIPT
     context['color_schemes'] = json.dumps(app_settings.COLOR_SCHEMES)
     return context
 
@@ -183,6 +183,11 @@ class ChartEmbedViewSet(CustomModelViewSet):
     queryset = Chart.objects.all()
     serializer_class = ChartEmbedSerializer
     lookup_field = 'slug'
+
+    def get_serializer_context(self):
+        return {
+            'size': self.request.query_params.get('size', 'double')
+        }
 
 
 def oEmbed(request):

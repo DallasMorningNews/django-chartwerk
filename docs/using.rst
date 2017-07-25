@@ -2,13 +2,13 @@
 Using
 =====
 
-Take a look around. Django-chartwerk consists of a just a few simple views.
+Take a look around. Django-chartwerk consists of just a few simple views.
 
 
 Start
 -----
 
-This page lists your templates by their relative popularity.
+This page lists your templates by their popularity.
 
 .. note::
   You can add thumbnails to your templates and add useful descriptions for when to use them in the Django admin section of your project.

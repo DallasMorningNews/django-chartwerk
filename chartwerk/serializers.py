@@ -107,9 +107,11 @@ class ReverseTemplatePropertySerializer(serializers.ModelSerializer):
 
 
 class ChartEmbedSerializer(serializers.ModelSerializer):
-    chartId = serializers.CharField(source='slug')
-    embedData = serializers.JSONField(source='embed_data')
+    embed_code = serializers.SerializerMethodField()
 
     class Meta:
         model = Chart
-        fields = ('chartId', 'embedData')
+        fields = ('slug', 'embed_code')
+
+    def get_embed_code(self, obj):
+        return obj.get_embed_code(self.context.get('size'))

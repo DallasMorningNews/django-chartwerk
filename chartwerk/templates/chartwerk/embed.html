@@ -1,0 +1,9 @@
+<div
+  class="chartwerk"
+  data-id="{{id}}"
+  data-dimensions="{{dimensions}}"
+  data-size="{{size}}"
+></div>
+<script>
+!function(){for(var t=document.querySelectorAll(".chartwerk"),e=0;e<t.length;e++){var r=t[e],i=r.dataset.id,h=JSON.parse(r.dataset.dimensions),l=r.dataset.size,a=r.parentElement.clientWidth;if(r.querySelectorAll("iframe").length<1){var s=document.createElement("iframe");s.setAttribute("scrolling","no"),s.setAttribute("frameborder","0"),"double"===l&&a>h.double.width?(s.setAttribute("src","{{chart_path}}"+i+".html"),s.setAttribute("height",h.double.height),s.setAttribute("width","100%")):(s.setAttribute("src","{{chart_path}}"+i+"_single.html"),s.setAttribute("height",h.single.height),s.setAttribute("width",h.single.width)),r.appendChild(s)}}}();
+</script>

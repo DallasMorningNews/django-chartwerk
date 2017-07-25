@@ -5,6 +5,7 @@ import string
 from datetime import datetime
 
 from chartwerk.conf import settings as app_settings
+from django import template
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.urls import reverse
@@ -75,15 +76,30 @@ class Chart(Chartwerk):
     def get_absolute_url(self):
         return reverse('chartwerk_chart', kwargs=dict(slug=self.slug))
 
-    def oembed(self, size='double'):
+    def get_embed_code(self, size='double'):
+        """Return the embed code for the chart."""
         def simple_string(split_string):
             """Return a string stripped of extra whitespace."""
             return ' '.join(split_string.split())
 
+        template_object = template.Template(app_settings.EMBED_TEMPLATE)
+        template_context_object = app_settings.EMBED_TEMPLATE_CONTEXT(self)
+        template_context_object.update({
+            'size': size,
+            'id': self.slug,
+            'dimensions': json.dumps(self.embed_data).replace('"', '&quot;'),
+        })
+        return simple_string(
+            template_object.render(template.Context(
+                template_context_object
+            ))
+        )
+
+    def oembed(self, size='double'):
         return {
             "version": "1.0",
             "url": os.path.join(
-                settings.CHARTWERK_DOMAIN,
+                app_settings.DOMAIN,
                 self.get_absolute_url()[1:],
             ),
             "title": self.title,
@@ -100,19 +116,7 @@ class Chart(Chartwerk):
             "height": self.embed_data['double']['height'] or "",
             "single_width": self.embed_data['single']['width'] or "",
             "single_height": self.embed_data['single']['height'] or "",
-            "html": simple_string("""<div
-                class="chartwerk"
-                data-id="{}"
-                data-embed="{}"
-                data-size="{}"
-            ></div>
-            <script src='{}'></script>
-            """).format(
-                self.slug,
-                json.dumps(self.embed_data).replace('"', '&quot;'),
-                size,
-                app_settings.EMBED_SCRIPT,
-            )
+            "html": self.get_embed_code(size),
         }
 
 

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2017-06-25
+### Added
+- Added embed code templating options and config.
+
 ## [0.0.4] - 2017-05-31
 ### Changed
 - Fixed typo in setup code.
