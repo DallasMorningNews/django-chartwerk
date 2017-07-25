@@ -73,7 +73,6 @@ Settings.EMBED_TEMPLATE = getattr(
 EMBED_TEMPLATE_CONTEXT = getattr(
     project_settings, 'CHARTWERK_EMBED_TEMPLATE_CONTEXT',
     lambda chart: {
-        'embed_sizes': json.dumps(chart.embed_data).replace('"', '&quot;'),
         'chart_path': 'http://www.somesite.com/path/to/charts/',
     }
 )

@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import string
@@ -86,6 +87,7 @@ class Chart(Chartwerk):
         template_context_object.update({
             'size': size,
             'id': self.slug,
+            'dimensions': json.dumps(self.embed_data).replace('"', '&quot;'),
         })
         return simple_string(
             template_object.render(template.Context(
