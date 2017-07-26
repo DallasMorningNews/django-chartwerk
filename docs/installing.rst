@@ -88,11 +88,17 @@ Quickstart
 
   __all__ = ['celery_app']
 
-5. Run migrations and start the dev server!
+5. Run chartwerk migrations and load free chart templates from fixtures.
 
 ::
 
   $ python manage.py migrate chartwerk
+  $ python manage.py loaddata free_charts
+
+6. Start the dev server and enjoy!
+
+::
+
   $ python manage.py runserver
 
 
@@ -150,14 +156,9 @@ Add your router and database in settings.
     'project.routers.ChartwerkRouter',
   ]
 
-When you separate django-chartwerk's database, you must specify the database explicitly when running migrations to create models.
+When you separate django-chartwerk's database, you must specify the database explicitly when running migrations to create models and loading fixtures.
 
 .. code::
 
   $ python manage.py migrate chartwerk --database chartwerk
-
-After running initial migrations, you'll also need to manually load fixtures to get django-chartwerk's free templates.
-
-.. code::
-
-  $ python manage.py loaddata free_templates --database chartwerk
+  $ python manage.py loaddata free_charts --database chartwerk
