@@ -7,7 +7,7 @@ Assumptions
 
 1. django-chartwerk is written to save charts to Amazon Web Service's Simple Storage Service (S3). We assume that's your plan, too.
 
-2. django-chartwerk uses Django's `JSONField <https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield>`_ field, therefore, the app **requires** a PostgreSQL database.
+2. django-chartwerk uses Django's `JSONField <https://docs.djangoproject.com/en/1.11/ref/contrib/postgres/fields/#jsonfield>`_ field, therefore, the app **requires** a PostgreSQL database ≥ 9.4.
 
 .. note::
 
