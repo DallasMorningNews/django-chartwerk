@@ -5,10 +5,10 @@ Some settings are required and raise errors if not set.
 Other settings have defaults. Optional settigns default to None.
 """
 
-import json
 import os
 
 from django.conf import settings as project_settings
+from django.templatetags.static import static
 
 
 class ChartwerkConfigError(Exception):
@@ -74,6 +74,10 @@ EMBED_TEMPLATE_CONTEXT = getattr(
     project_settings, 'CHARTWERK_EMBED_TEMPLATE_CONTEXT',
     lambda chart: {
         'chart_path': 'http://www.somesite.com/path/to/charts/',
+        'embed_script': os.path.join(
+            Settings.DOMAIN,
+            static('chartwerk/js/main-embed.bundle.js'),
+        ),
     }
 )
 if not callable(EMBED_TEMPLATE_CONTEXT):
@@ -91,12 +95,6 @@ Settings.AWS_PATH = getattr(project_settings, 'CHARTWERK_AWS_PATH', 'charts')
 
 Settings.CACHE_HEADER = getattr(
     project_settings, 'CHARTWERK_CACHE_HEADER', 'max-age=300')
-
-Settings.JQUERY = getattr(
-        project_settings,
-        'CHARTWERK_JQUERY',
-        'https://code.jquery.com/jquery-3.2.1.slim.min.js'
-    )
 
 Settings.AUTH_DECORATOR = getattr(
         project_settings,
