@@ -98,11 +98,8 @@ def write_to_aws(pk):
 
     try:
         werk.client = {
-            'jquery': app_settings.JQUERY,
-            'scripts': render_local_static(
-                'chartwerk/js/client.bundle.js'),
+            'scripts': render_local_static('chartwerk/js/client.bundle.js'),
             'styles': render_local_static('chartwerk/css/client.css'),
-            'reset': render_local_static('chartwerk/css/reset.css')
         }
         werk.dependencies = build_dependencies(
             scripts=werk.data['scripts']['dependencies']['scripts'],
@@ -118,7 +115,7 @@ def write_to_aws(pk):
         )
         bucket.Object(key).put(
             Body=render_to_string(
-                'chartwerk/base_chart.html', {'werk': werk}),
+                'chartwerk/bake_template.html', {'werk': werk}),
             ContentType='text/html',
             CacheControl=app_settings.CACHE_HEADER,
             ACL='public-read',
@@ -131,7 +128,7 @@ def write_to_aws(pk):
         )
         bucket.Object(key).put(
             Body=render_to_string(
-                'chartwerk/base_chart.html', {'werk': werk}),
+                'chartwerk/bake_template.html', {'werk': werk}),
             ContentType='text/html',
             CacheControl=app_settings.CACHE_HEADER,
             ACL='public-read',
