@@ -229,6 +229,48 @@ If you'd like the oEmbed endpoint to support any additional URL patterns, provid
   )
 
 
+Configuring an oEmbed integration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Configure your CMS's oEmbed integration to make GET requests to django-chartwerk's oEmbed endpoint at :code:`/api/oembed/`. An example might look like: :code:`https://myapp.com/chartwerk/api/oembed/`.
+
+At minimum, you need to send an encoded URI for the chart you'd like to embed in a :code:`url` query parameter. In django-chartwerk, charts have two canonical URIs:
+
+- :code:`/chart/<chart ID>/`
+- :code:`/api/charts/<chart ID>/`
+
+The embed code generator in chartwerk-editor will return the latter to the user when :code:`CHARTWERK_OEMBED = True`.
+
+So an oEmbed request might look like:
+
+:code:`https://myapp.com/chartwerk/api/oembed/?url=https%3A%2F%2Fmyapp.com%2Fchartwerk%2Fchart%2F<chart ID>%2F`
+
+Remember, django-chartwerk will bake out two chart sizes, double and single-wide. Your integration is responsible for passing a user's *preferred* chart size in the oEmbed request as an additional query string parameter, :code:`size={single|double}`.
+
+A response -- using the default embed code -- may look like this:
+
+.. code::
+
+  {
+    "version": "1.0",
+    "url": "https:\/\/myapp.com\/chartwerk\/chart\/<chart ID>\/",
+    "title": "A map",
+    "provider_url": "https:\/\/myapp.com\/chartwerk\/",
+    "provider_name": "Chartwerk",
+    "author_name": "user@email.com",
+    "chart_id": "<chart ID>",
+    "type": "rich",
+    "size": "double",
+    "width": 600,
+    "height": 494,
+    "single_width": 290,
+    "single_height": 329,
+    "html": "<div id=\"chartwerk_<chart ID>\" class=\"chartwerk\" data-id=\"<chart ID>\" data-dimensions=\"{&quot;double&quot;: {&quot;width&quot;: 600, &quot;height&quot;: 494}, &quot;single&quot;: {&quot;width&quot;: 290, &quot;height&quot;: 329}}\" data-size=\"double\" data-src=\"https:\/\/myS3bucket.com\/charts\/chartwerk\/\" ><\/div> <script src=\"https:\/\/myS3bucket.com\/charts\/chartwerk\/embed-script\/v1.js\"><\/script>"
+  }
+
+The :code:`html` property in the response object will be generated using :code:`CHARTWERK_EMBED_TEMPLATE`. Your integration should use it to inject your embed code into your page.
+
+
 Embed code
 ----------
 
