@@ -4,7 +4,8 @@ import pym from 'pym.js';
 
 const werks = document.querySelectorAll('.chartwerk');
 
-werks.forEach((werk) => {
+for (let i = 0; i < werks.length; i++) {
+  const werk = werks[i];
   const id = werk.dataset.id;
   const chartPath = werk.dataset.src;
   const paths = {
@@ -40,4 +41,4 @@ werks.forEach((werk) => {
       }
     }
   }
-});
+}
