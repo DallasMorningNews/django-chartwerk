@@ -115,7 +115,7 @@ def write_to_aws(pk):
         )
         bucket.Object(key).put(
             Body=render_to_string(
-                'chartwerk/bake_template.html', {'werk': werk}),
+                'chartwerk/bake.html', {'werk': werk}),
             ContentType='text/html',
             CacheControl=app_settings.CACHE_HEADER,
             ACL='public-read',
@@ -128,7 +128,7 @@ def write_to_aws(pk):
         )
         bucket.Object(key).put(
             Body=render_to_string(
-                'chartwerk/bake_template.html', {'werk': werk}),
+                'chartwerk/bake.html', {'werk': werk}),
             ContentType='text/html',
             CacheControl=app_settings.CACHE_HEADER,
             ACL='public-read',

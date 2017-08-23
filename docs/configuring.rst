@@ -365,7 +365,41 @@ You can add any additional properties from your chart as template context.
 
 Remember, that your embed template must include the scripts used to inject, configure and style the iframe on your page.
 
-Adding scripts to the child page
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Custom templates
+----------------
 
-If you need to add a script to the child page, you can `override the template <https://docs.djangoproject.com/en/1.11/howto/overriding-templates/>`_ used to bake charts to S3. Add a :code:`chartwerk/bake_template.html` template to your project with the additional code you need. Just be careful to copy over the existing code from the template.
+Customizing the Editor
+^^^^^^^^^^^^^^^^^^^^^^
+
+You can customize the Editor with styles to better reflect your CMS by `overriding <https://docs.djangoproject.com/en/1.11/howto/overriding-templates/>`_ the :code:`chartwerk/editor.html` template. Add the template to your project and extend from :code:`chartwerk/django-chartwerk-editor.html`.
+
+.. code-block:: html+jinja
+
+  <!-- chartwerk/editor.html -->
+  {% extends "chartwerk/django-chartwerk-editor.html" %}
+
+  {% block head_block %}
+  <link rel="stylesheet" type="text/css" href="some_styles.css" />
+  {% endblock %}
+
+  {% block body_block %}
+  <script src="some_script.js"></script>
+  {% endblock %}
+
+Customizing the child page
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you need to customize charts' embaddable child page, you can `override the template <https://docs.djangoproject.com/en/1.11/howto/overriding-templates/>`_ used to bake charts to S3. Add a :code:`chartwerk/bake.html` template to your project that extends from :code:`chartwerk/bake_base.html` and add scripts or styles within the available blocks:
+
+.. code-block:: html+jinja
+
+  <!-- chartwerk/bake.html -->
+  {% extends "chartwerk/bake_base.html" %}
+
+  {% block head_block %}
+  <link rel="stylesheet" type="text/css" href="some_styles.css" />
+  {% endblock %}
+
+  {% block body_block %}
+  <script src="some_script.js"></script>
+  {% endblock %}

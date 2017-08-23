@@ -17,7 +17,7 @@
 
     	{%block custom_head%}
       {%endblock%}
-
+      {% block head_block %}{% endblock %}
     </head>
     <body>
 
@@ -30,5 +30,7 @@
 
       {%block custom_js%}
       {%endblock%}
+
+      {% block body_block %}{% endblock %}
     </body>
 </html>

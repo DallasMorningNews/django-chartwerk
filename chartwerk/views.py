@@ -110,7 +110,7 @@ class MyWerk(ListView):
 @secure
 class ChartDetail(DetailView):
     model = Chart
-    template_name = 'chartwerk/django-chartwerk-editor.html'
+    template_name = 'chartwerk/editor.html'
 
     def get_context_data(self, **kwargs):
         context = super(ChartDetail, self).get_context_data(**kwargs)
@@ -125,7 +125,7 @@ class ChartDetail(DetailView):
 @secure
 class TemplateDetail(DetailView):
     model = Template
-    template_name = 'chartwerk/django-chartwerk-editor.html'
+    template_name = 'chartwerk/editor.html'
 
     def get_context_data(self, **kwargs):
         context = super(TemplateDetail, self).get_context_data(**kwargs)
