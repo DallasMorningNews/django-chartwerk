@@ -84,7 +84,7 @@ if not callable(EMBED_TEMPLATE_CONTEXT):
     raise ChartwerkConfigError('CHARTWERK_EMBED_TEMPLATE_CONTEXT must be a \
 function that accepts one parameter, the chart object.')
 
-Settings.EMBED_TEMPLATE_CONTEXT = EMBED_TEMPLATE_CONTEXT
+Settings.EMBED_TEMPLATE_CONTEXT = staticmethod(EMBED_TEMPLATE_CONTEXT)
 
 Settings.OEMBED = getattr(project_settings, 'CHARTWERK_OEMBED', False)
 
