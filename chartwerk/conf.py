@@ -93,6 +93,9 @@ Settings.OEMBED_EXTRA_PATTERNS = getattr(
 
 Settings.AWS_PATH = getattr(project_settings, 'CHARTWERK_AWS_PATH', 'charts')
 
+Settings.AWS_REGION = getattr(
+    project_settings, 'CHARTWERK_AWS_REGION', 'us-east-1')
+
 Settings.CACHE_HEADER = getattr(
     project_settings, 'CHARTWERK_CACHE_HEADER', 'max-age=300')
 
@@ -123,6 +126,9 @@ Settings.COLOR_SCHEMES = getattr(
 #####################
 # OPTIONAL SETTINGS #
 #####################
+
+Settings.CLOUDFRONT_DISTRIBUTION = getattr(
+    project_settings, 'CHARTWERK_CLOUDFRONT_DISTRIBUTION', None)
 
 Settings.GITHUB_REPO = None
 

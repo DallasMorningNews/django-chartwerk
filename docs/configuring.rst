@@ -90,7 +90,9 @@ AWS
   CHARTWERK_AWS_SECRET_ACCESS_KEY = None  # Required
   CHARTWERK_AWS_BUCKET = None  # Required
   CHARTWERK_AWS_PATH = "charts"
+  CHARTWERK_AWS_REGION = "us-east-1"
   CHARTWERK_CACHE_HEADER = "max-age=300"
+  CHARTWERK_CLOUDFRONT_DISTRIBUTION = None
   CHARTWERK_DOMAIN = None  # Required
 
 :code:`CHARTWERK_AWS_ACCESS_KEY_ID` **(Required)**
@@ -114,6 +116,11 @@ AWS S3 bucket name to publish charts to.
 
 The domain of the app running Chartwerk. For example, your app may be hosted at :code:`http://myapp.mydomain.com`.
 
+:code:`CHARTWERK_AWS_REGION`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Region of your AWS bucket.
+
 :code:`CHARTWERK_AWS_PATH`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -123,6 +130,11 @@ Path within your S3 bucket to append to your charts when publishing. For example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Cache header to add to chart files when published to S3.
+
+:code:`CHARTWERK_CLOUDFRONT_DISTRIBUTION`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you're using Amazon CloudFront in front of your S3 bucket and would like to create an invalidation whenever charts are updated, add your distribution ID to this setting.
 
 
 GitHub
