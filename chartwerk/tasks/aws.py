@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def get_chartwerk_bucket():
     session = Session(
-        region_name='us-east-1',
+        region_name=app_settings.AWS_REGION,
         aws_access_key_id=app_settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=app_settings.AWS_SECRET_ACCESS_KEY
     )
@@ -29,7 +29,7 @@ def get_chartwerk_bucket():
 def invalidate_cache(slug):
     if app_settings.CLOUDFRONT_DISTRIBUTION:
         session = Session(
-            region_name='us-east-1',
+            region_name=app_settings.AWS_REGION,
             aws_access_key_id=app_settings.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=app_settings.AWS_SECRET_ACCESS_KEY
         )
