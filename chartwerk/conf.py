@@ -124,6 +124,9 @@ Settings.COLOR_SCHEMES = getattr(
 # OPTIONAL SETTINGS #
 #####################
 
+Settings.CLOUDFRONT_DISTRIBUTION = getattr(
+    project_settings, 'CHARTWERK_CLOUDFRONT_DISTRIBUTION', None)
+
 Settings.GITHUB_REPO = None
 
 Settings.GITHUB_TOKEN = getattr(

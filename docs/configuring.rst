@@ -124,6 +124,11 @@ Path within your S3 bucket to append to your charts when publishing. For example
 
 Cache header to add to chart files when published to S3.
 
+:code:`CHARTWERK_CLOUDFRONT_DISTRIBUTION`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you're using Amazon CloudFront in front of your S3 bucket and would like to create an invalidation whenever charts are updated, add your distribution ID to this setting.
+
 
 GitHub
 ------

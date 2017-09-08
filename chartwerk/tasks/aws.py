@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import logging
 import os
+from datetime import datetime
 
 from boto3.session import Session
 from celery import shared_task
@@ -23,6 +24,35 @@ def get_chartwerk_bucket():
     )
     s3 = session.resource('s3')
     return s3.Bucket(app_settings.AWS_BUCKET)
+
+
+def invalidate_cache(slug):
+    if app_settings.CLOUDFRONT_DISTRIBUTION:
+        session = Session(
+            region_name='us-east-1',
+            aws_access_key_id=app_settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=app_settings.AWS_SECRET_ACCESS_KEY
+        )
+        cloudfront = session.resource('cloudfront')
+        cloudfront.create_invalidation(
+            DistributionId=app_settings.CLOUDFRONT_DISTRIBUTION,
+            InvalidationBatch={
+                'Paths': {
+                    'Quantity': 2,
+                    'Items': [
+                        os.path.join(
+                            app_settings.AWS_PATH,
+                            "{}.html".format(slug)
+                        ),
+                        os.path.join(
+                            app_settings.AWS_PATH,
+                            "{}_single.html".format(slug)
+                        ),
+                    ]
+                },
+                'CallerReference': '{}'.format(datetime.now())
+            }
+        )
 
 
 def render_local_static(static_file):
@@ -133,5 +163,6 @@ def write_to_aws(pk):
             CacheControl=app_settings.CACHE_HEADER,
             ACL='public-read',
         )
+        invalidate_cache(werk.slug)
     except Exception:
         logging.exception("AWS write error")
