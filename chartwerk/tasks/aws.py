@@ -41,12 +41,14 @@ def invalidate_cache(slug):
                     'Quantity': 2,
                     'Items': [
                         os.path.join(
+                            '/',
                             app_settings.AWS_PATH,
-                            "{}.html".format(slug)
+                            '{}.html'.format(slug)
                         ),
                         os.path.join(
+                            '/',
                             app_settings.AWS_PATH,
-                            "{}_single.html".format(slug)
+                            '{}_single.html'.format(slug)
                         ),
                     ]
                 },
