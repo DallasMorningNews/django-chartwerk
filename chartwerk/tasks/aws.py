@@ -5,6 +5,7 @@ import logging
 import os
 from datetime import datetime
 
+import boto3
 from boto3.session import Session
 from celery import shared_task
 from chartwerk.conf import settings as app_settings
@@ -28,12 +29,11 @@ def get_chartwerk_bucket():
 
 def invalidate_cache(slug):
     if app_settings.CLOUDFRONT_DISTRIBUTION:
-        session = Session(
-            region_name=app_settings.AWS_REGION,
+        cloudfront = boto3.client(
+            'cloudfront',
             aws_access_key_id=app_settings.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=app_settings.AWS_SECRET_ACCESS_KEY
         )
-        cloudfront = session.resource('cloudfront')
         cloudfront.create_invalidation(
             DistributionId=app_settings.CLOUDFRONT_DISTRIBUTION,
             InvalidationBatch={
