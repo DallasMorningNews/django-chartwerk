@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.15] - 2017-09-15
+### Changed
+- Updated chartwerk-editor to 0.2.4
+
 ## [0.5.0] - 2017-06-25
 ### Added
 - Added embed code templating options and config.
