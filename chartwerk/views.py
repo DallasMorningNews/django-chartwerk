@@ -118,7 +118,8 @@ class ChartDetail(DetailView):
         return build_context(
             context,
             self.request,
-            chart_id=self.object.slug
+            chart_id=self.object.slug,
+            template_id=self.object.data['template'].get('id', '')
         )
 
 
