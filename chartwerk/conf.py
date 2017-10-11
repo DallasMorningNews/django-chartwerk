@@ -28,27 +28,27 @@ class Settings:
 
 Settings.DOMAIN = getattr(project_settings, 'CHARTWERK_DOMAIN', None)
 
-if not Settings.DOMAIN:
+if Settings.DOMAIN is None:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_DOMAIN \
 variable. Set it in your project settings.')
 
 Settings.AWS_BUCKET = getattr(project_settings, 'CHARTWERK_AWS_BUCKET', None)
 
-if not Settings.AWS_BUCKET:
+if Settings.AWS_BUCKET is None:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_AWS_BUCKET \
 variable. Set it either in your project settings.')
 
 Settings.AWS_ACCESS_KEY_ID = getattr(
     project_settings, 'CHARTWERK_AWS_ACCESS_KEY_ID', None)
 
-if not Settings.AWS_ACCESS_KEY_ID:
+if Settings.AWS_ACCESS_KEY_ID is None:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_AWS_ACCESS_KEY_ID \
 variable. Set it in your project settings.')
 
 Settings.AWS_SECRET_ACCESS_KEY = getattr(
     project_settings, 'CHARTWERK_AWS_SECRET_ACCESS_KEY', None)
 
-if not Settings.AWS_SECRET_ACCESS_KEY:
+if Settings.AWS_SECRET_ACCESS_KEY is None:
     raise ChartwerkConfigError('You haven\'t set the CHARTWERK_AWS_SECRET_ACCESS_KEY \
 variable. Set it in your project settings.')
 
