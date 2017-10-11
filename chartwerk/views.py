@@ -10,9 +10,12 @@ from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
                                    TemplatePropertySerializer,
                                    TemplateSerializer)
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import NoReverseMatch, reverse
 from django.http import (HttpResponseBadRequest, HttpResponseNotFound,
                          JsonResponse)
+from django.db.models import Q
 from django.urls import resolve
 from django.utils.decorators import method_decorator
 from django.utils.six.moves.urllib.parse import urlparse
@@ -72,13 +75,39 @@ def build_context(context, request, chart_id='', template_id=''):
     return context
 
 
+class ChartIconMixin(object):
+    """Associate charts with templates here, to avoid lots of extra queries
+    during template rendering"""
+    def get_context_data(self, **kwargs):
+        context = super(ChartIconMixin, self).get_context_data(**kwargs)
+
+        # Get all the template icons and them in a dict we can use as a
+        # lookup
+        icons = Template.objects.defer('data')
+        icon_lookup = {i.title: i.icon for i in icons}
+
+        default_icon = static('chartwerk/img/chartwerk_100.png')
+
+        for chart in context[self.context_object_name]:
+            tpl_title = chart.data['template']['title']
+
+            # If the chart template isn't found or it's icon field is null,
+            # use default
+            if not icon_lookup.get(tpl_title):
+                chart.icon = default_icon
+            else:
+                chart.icon = icon_lookup[tpl_title].url
+
+        return context
+
+
 @secure
 class Home(TemplateView):
     template_name = 'chartwerk/home.html'
 
 
 @secure
-class Browse(ListView):
+class Browse(ChartIconMixin, ListView):
     context_object_name = 'charts'
     template_name = 'chartwerk/browse.html'
     queryset = Chart.objects.all().order_by('-pk')
@@ -90,9 +119,27 @@ class Start(ListView):
     template_name = 'chartwerk/start.html'
     queryset = Template.objects.all().order_by('-pk')
 
+    def get_context_data(self, **kwargs):
+        context = super(Start, self).get_context_data(**kwargs)
+
+        # Get all users who have first and last name; we don't care about
+        # users with missing names because the Template alreadh has e-mails
+        all_users = User.objects.filter(
+            ~Q(first_name='') | ~Q(last_name='')
+        )
+        user_lookup = {u.email: u.get_full_name() for u in all_users}
+
+        for template in context[self.context_object_name]:
+            try:
+                template.author_name = user_lookup[template.author]
+            except KeyError:
+                template.author_name = template.author
+
+        return context
+
 
 @secure
-class MyWerk(ListView):
+class MyWerk(ChartIconMixin, ListView):
     context_object_name = 'charts'
     template_name = 'chartwerk/myWerk.html'
     queryset = Chart.objects.all().order_by('-pk')
