@@ -71,7 +71,7 @@ class Chart(Chartwerk):
         super(Chart, self).save(*args, **kwargs)
 
     def __str__(self):
-        return u'{} - {} by {}'.format(self.slug, self.title, self.author)
+        return "{} - {} by {}".format(self.slug, self.title, self.author)
 
     def get_absolute_url(self):
         return reverse('chartwerk_chart', kwargs=dict(slug=self.slug))
