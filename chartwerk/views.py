@@ -73,21 +73,11 @@ def build_context(context, request, chart_id='', template_id=''):
     return context
 
 
-@secure
-class Home(TemplateView):
-    template_name = 'chartwerk/home.html'
-
-
-@secure
-class Browse(ListView):
-    context_object_name = 'charts'
-    template_name = 'chartwerk/browse.html'
-    queryset = Chart.objects.all().order_by('-pk')
-
+class ChartIconMixin(object):
+    """Associate charts with templates here, to avoid lots of extra queries
+    during template rendering"""
     def get_context_data(self, **kwargs):
-        """Associate charts with templates here, to avoid lots of extra
-        queries during template rendering"""
-        context = super(Browse, self).get_context_data(**kwargs)
+        context = super(ChartIconMixin, self).get_context_data(**kwargs)
 
         # Get all the template icons and them in a dict we can use as a
         # lookup
@@ -110,6 +100,18 @@ class Browse(ListView):
 
 
 @secure
+class Home(TemplateView):
+    template_name = 'chartwerk/home.html'
+
+
+@secure
+class Browse(ChartIconMixin, ListView):
+    context_object_name = 'charts'
+    template_name = 'chartwerk/browse.html'
+    queryset = Chart.objects.all().order_by('-pk')
+
+
+@secure
 class Start(ListView):
     context_object_name = 'templates'
     template_name = 'chartwerk/start.html'
@@ -117,7 +119,7 @@ class Start(ListView):
 
 
 @secure
-class MyWerk(ListView):
+class MyWerk(ChartIconMixin, ListView):
     context_object_name = 'charts'
     template_name = 'chartwerk/myWerk.html'
     queryset = Chart.objects.all().order_by('-pk')
