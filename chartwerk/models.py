@@ -9,6 +9,7 @@ from django import template
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.urls import reverse
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.text import slugify
 from uuslug import uuslug
 
@@ -53,6 +54,7 @@ class Chartwerk(models.Model):
         abstract = True
 
 
+@python_2_unicode_compatible
 class Chart(Chartwerk):
     embed_data = JSONField(blank=True, null=True)
 
@@ -136,6 +138,7 @@ class Template(Chartwerk):
         return self.slug
 
 
+@python_2_unicode_compatible
 class TemplateProperty(models.Model):
     slug = models.CharField(max_length=250, unique=True)
     property = models.CharField(max_length=250, unique=True)
@@ -160,6 +163,7 @@ class TemplateProperty(models.Model):
         verbose_name_plural = "Template properties"
 
 
+@python_2_unicode_compatible
 class FinderQuestion(models.Model):
     question = models.CharField(max_length=250)
     order = models.PositiveSmallIntegerField(unique=True)
