@@ -10,10 +10,12 @@ from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
                                    TemplatePropertySerializer,
                                    TemplateSerializer)
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import NoReverseMatch, reverse
 from django.http import (HttpResponseBadRequest, HttpResponseNotFound,
                          JsonResponse)
+from django.db.models import Q
 from django.urls import resolve
 from django.utils.decorators import method_decorator
 from django.utils.six.moves.urllib.parse import urlparse
@@ -86,7 +88,7 @@ class ChartIconMixin(object):
 
         default_icon = static('chartwerk/img/chartwerk_100.png')
 
-        for chart in context['charts']:
+        for chart in context[self.context_object_name]:
             tpl_title = chart.data['template']['title']
 
             # If the chart template isn't found or it's icon field is null,
@@ -116,6 +118,24 @@ class Start(ListView):
     context_object_name = 'templates'
     template_name = 'chartwerk/start.html'
     queryset = Template.objects.all().order_by('-pk')
+
+    def get_context_data(self, **kwargs):
+        context = super(Start, self).get_context_data(**kwargs)
+
+        # Get all users who have first and last name; we don't care about
+        # users with missing names because the Template alreadh has e-mails
+        all_users = User.objects.filter(
+            ~Q(first_name='') | ~Q(last_name='')
+        )
+        user_lookup = {u.email: u.get_full_name() for u in all_users}
+
+        for template in context[self.context_object_name]:
+            try:
+                template.author_name = user_lookup[template.author]
+            except KeyError:
+                template.author_name = template.author
+
+        return context
 
 
 @secure
