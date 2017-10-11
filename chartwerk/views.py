@@ -10,6 +10,7 @@ from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
                                    TemplatePropertySerializer,
                                    TemplateSerializer)
 from django.conf import settings
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import NoReverseMatch, reverse
 from django.http import (HttpResponseBadRequest, HttpResponseNotFound,
                          JsonResponse)
@@ -82,6 +83,30 @@ class Browse(ListView):
     context_object_name = 'charts'
     template_name = 'chartwerk/browse.html'
     queryset = Chart.objects.all().order_by('-pk')
+
+    def get_context_data(self, **kwargs):
+        """Associate charts with templates here, to avoid lots of extra
+        queries during template rendering"""
+        context = super(Browse, self).get_context_data(**kwargs)
+
+        # Get all the template icons and them in a dict we can use as a
+        # lookup
+        icons = Template.objects.defer('data')
+        icon_lookup = {i.title: i.icon for i in icons}
+
+        default_icon = static('chartwerk/img/chartwerk_100.png')
+
+        for chart in context['charts']:
+            tpl_title = chart.data['template']['title']
+
+            # If the chart template isn't found or it's icon field is null,
+            # use default
+            if not icon_lookup.get(tpl_title):
+                chart.icon = default_icon
+            else:
+                chart.icon = icon_lookup[tpl_title].url
+
+        return context
 
 
 @secure
