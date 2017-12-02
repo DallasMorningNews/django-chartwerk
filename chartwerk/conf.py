@@ -171,4 +171,7 @@ Settings.SLACK_CHANNEL = getattr(
 Settings.SLACK_TOKEN = getattr(
     project_settings, 'CHARTWERK_SLACK_TOKEN', None)
 
+Settings.JS_SUBPROCESS = getattr(
+    project_settings, 'CHARTWERK_JS_SUBPROCESS', None)
+
 settings = Settings

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import logging
 import os
+import subprocess
 from datetime import datetime
 
 import boto3
@@ -114,6 +115,34 @@ def cleaner(werk):
     return werk
 
 
+def compile_js(scripts):
+    """Optionally compile JavaScript.
+
+    Users can specify args to subprocess and pipe JS through any
+    available CLI compiler.
+    """
+    def subprocess_js(script):
+        try:
+            output = subprocess.run(
+                app_settings.JS_SUBPROCESS,
+                input=bytes(script, 'utf-8'),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True
+            )
+            return output.stdout.decode('utf-8')
+        except subprocess.CalledProcessError:
+            logging.exception("Error compiling JavaScript.")
+            return script
+
+    if app_settings.JS_SUBPROCESS is None:
+        return scripts
+
+    scripts['helper'] = subprocess_js(scripts['helper'])
+    scripts['draw'] = subprocess_js(scripts['draw'])
+    return scripts
+
+
 @shared_task
 def write_to_aws(pk):
     """Write to AWS S3 bucket.
@@ -137,7 +166,7 @@ def write_to_aws(pk):
             scripts=werk.data['scripts']['dependencies']['scripts'],
             styles=werk.data['scripts']['dependencies']['styles']
         )
-        werk.scripts = werk.data['scripts']
+        werk.scripts = compile_js(werk.data['scripts'])
         werk = cleaner(werk)
         # DOUBLE-WIDE
         werk.data['ui']['size'] = 'double'
