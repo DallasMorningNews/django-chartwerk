@@ -123,14 +123,12 @@ def compile_js(scripts):
     """
     def subprocess_js(script):
         try:
-            output = subprocess.run(
+            output = subprocess.check_output(
                 app_settings.JS_SUBPROCESS,
                 input=bytes(script, 'utf-8'),
-                stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                check=True
             )
-            return output.stdout.decode('utf-8')
+            return output.decode('utf-8')
         except subprocess.CalledProcessError:
             logging.exception("Error compiling JavaScript.")
             return script
