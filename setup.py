@@ -5,7 +5,7 @@ from setuptools import find_packages, setup
 
 REPO_URL = 'https://github.com/DallasMorningNews/django-chartwerk/'
 
-PYPI_VERSION = '0.5.16'
+PYPI_VERSION = '0.5.17'
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
     README = readme.read()
@@ -16,7 +16,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='django-chartwerk',
     version=PYPI_VERSION,
-    packages=find_packages(),
+    packages=find_packages(exclude=('example',)),
     include_package_data=True,
     license='AGPLv3',
     description=(

@@ -137,6 +137,28 @@ Cache header to add to chart files when published to S3.
 If you're using Amazon CloudFront in front of your S3 bucket and would like to create an invalidation whenever charts are updated, add your distribution ID to this setting.
 
 
+Compiling JavaScript
+--------------------
+
+:code:`CHARTWERK_JS_SUBPROCESS`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you'd like to write your template scripts using modern JavaScript syntax, you can pipe them through a compiler before publishing by specifying arguments to pass to Python's `subprocess <https://docs.python.org/3/library/subprocess.html>`_ module.
+
+For example, if you'd like to compile ES2015 syntax using `Babel <https://babeljs.io/docs/usage/cli/>`_, you could specify subprocess args like this:
+
+.. code-block:: python
+
+  CHARTWERK_JS_SUBPROCESS = ['npx', 'babel', '--presets=es2015']
+
+
+This option assumes you have already installed the dependencies referenced in your subprocess on your server. Obviously, you can only use CLI compilers with this method.
+
+
+.. note::
+
+  This method **does not** compile scripts in the Editor. You should use a browser that supports the syntax features you're targeting when you and your users develop charts. JavaScript will be compiled before baking your charts to S3.
+
 GitHub
 ------
 

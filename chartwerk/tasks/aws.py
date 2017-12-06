@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import logging
 import os
+import subprocess
 from datetime import datetime
 
 import boto3
@@ -12,6 +13,7 @@ from chartwerk.conf import settings as app_settings
 from chartwerk.models import Chart
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.template.loader import render_to_string
+from django.utils.encoding import smart_bytes, smart_text
 from django.utils.six.moves.urllib.request import urlopen
 
 logger = logging.getLogger(__name__)
@@ -114,6 +116,36 @@ def cleaner(werk):
     return werk
 
 
+def compile_js(scripts):
+    """Optionally compile JavaScript.
+
+    Users can specify args to subprocess and pipe JS through any
+    available CLI compiler.
+    """
+    def subprocess_js(script):
+        process = subprocess.Popen(
+            app_settings.JS_SUBPROCESS,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE
+        )
+        output, output_err = process.communicate(
+            smart_bytes(script, encoding='utf-8')
+        )
+
+        if process.returncode != 0:
+            logging.error("Error compiling JavaScript: %s", output_err)
+            return script
+
+        return smart_text(output)
+
+    if app_settings.JS_SUBPROCESS is None:
+        return scripts
+
+    scripts['helper'] = subprocess_js(scripts['helper'])
+    scripts['draw'] = subprocess_js(scripts['draw'])
+    return scripts
+
+
 @shared_task
 def write_to_aws(pk):
     """Write to AWS S3 bucket.
@@ -137,7 +169,7 @@ def write_to_aws(pk):
             scripts=werk.data['scripts']['dependencies']['scripts'],
             styles=werk.data['scripts']['dependencies']['styles']
         )
-        werk.scripts = werk.data['scripts']
+        werk.scripts = compile_js(werk.data['scripts'])
         werk = cleaner(werk)
         # DOUBLE-WIDE
         werk.data['ui']['size'] = 'double'

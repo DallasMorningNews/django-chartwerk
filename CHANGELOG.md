@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [0.5.17] - 2017-12-02
+### Added
+- JS compiler subprocess
+- Example app in repo
+
 ## [0.5.15] - 2017-09-15
 ### Changed
 - Updated chartwerk-editor to 0.2.4
