@@ -13,6 +13,7 @@ from chartwerk.conf import settings as app_settings
 from chartwerk.models import Chart
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.template.loader import render_to_string
+from django.utils.encoding import smart_bytes, smart_text
 from django.utils.six.moves.urllib.request import urlopen
 
 logger = logging.getLogger(__name__)
@@ -122,16 +123,20 @@ def compile_js(scripts):
     available CLI compiler.
     """
     def subprocess_js(script):
-        try:
-            output = subprocess.check_output(
-                app_settings.JS_SUBPROCESS,
-                input=bytes(script, 'utf-8'),
-                stderr=subprocess.PIPE,
-            )
-            return output.decode('utf-8')
-        except subprocess.CalledProcessError:
-            logging.exception("Error compiling JavaScript.")
+        process = subprocess.Popen(
+            app_settings.JS_SUBPROCESS,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE
+        )
+        output, output_err = process.communicate(
+            smart_bytes(script, encoding='utf-8')
+        )
+
+        if process.returncode != 0:
+            logging.error("Error compiling JavaScript: %s", output_err)
             return script
+
+        return smart_text(output)
 
     if app_settings.JS_SUBPROCESS is None:
         return scripts
