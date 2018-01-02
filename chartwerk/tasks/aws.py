@@ -9,12 +9,13 @@ from datetime import datetime
 import boto3
 from boto3.session import Session
 from celery import shared_task
-from chartwerk.conf import settings as app_settings
-from chartwerk.models import Chart
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_bytes, smart_text
 from django.utils.six.moves.urllib.request import urlopen
+
+from chartwerk.conf import settings as app_settings
+from chartwerk.models import Chart
 
 logger = logging.getLogger(__name__)
 
@@ -162,7 +163,7 @@ def write_to_aws(pk):
 
     try:
         werk.client = {
-            'scripts': render_local_static('chartwerk/js/client.bundle.js'),
+            'scripts': render_local_static('chartwerk/js/client.js'),
             'styles': render_local_static('chartwerk/css/client.css'),
         }
         werk.dependencies = build_dependencies(

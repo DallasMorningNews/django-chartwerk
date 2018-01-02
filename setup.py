@@ -5,7 +5,7 @@ from setuptools import find_packages, setup
 
 REPO_URL = 'https://github.com/DallasMorningNews/django-chartwerk/'
 
-PYPI_VERSION = '0.5.17'
+PYPI_VERSION = '0.5.18'
 
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
     README = readme.read()
@@ -37,6 +37,7 @@ setup(
         'Framework :: Django :: 1.9',
         'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU Affero General Public License v3',
         'Operating System :: OS Independent',
@@ -53,7 +54,6 @@ setup(
     install_requires=[
         'boto3>=1.4.0',
         'celery>=4.0.0',
-        'Django>=1.9',
         'django-uuslug>=1.1.8',
         'djangorestframework>=2.4',
         'Pillow',
