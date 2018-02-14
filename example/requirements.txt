@@ -7,8 +7,8 @@ celery==4.1.0
 certifi==2017.11.5
 chardet==3.0.4
 decorator==4.1.2
-Django==1.11.7
--e git+git@github.com:DallasMorningNews/django-chartwerk.git@cbf19c741e40515d94f5beed85fafde50bd78622#egg=django_chartwerk
+Django==2.0.2
+-e ./..
 django-uuslug==1.1.8
 djangorestframework==3.7.3
 docutils==0.14

@@ -12,11 +12,10 @@ from chartwerk.serializers import (ChartEmbedSerializer, ChartSerializer,
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.core.urlresolvers import NoReverseMatch, reverse
+from django.db.models import Q
 from django.http import (HttpResponseBadRequest, HttpResponseNotFound,
                          JsonResponse)
-from django.db.models import Q
-from django.urls import resolve
+from django.urls import NoReverseMatch, resolve, reverse
 from django.utils.decorators import method_decorator
 from django.utils.six.moves.urllib.parse import urlparse
 from django.views.generic import DetailView, ListView, TemplateView
