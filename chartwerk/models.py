@@ -122,6 +122,7 @@ class Chart(Chartwerk):
         }
 
 
+@python_2_unicode_compatible
 class Template(Chartwerk):
     def chart_count(self):
         return Chart.objects.filter(data__template__title=self.title).count()
