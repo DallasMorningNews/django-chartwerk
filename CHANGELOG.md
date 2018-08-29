@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 0.5.20 - TK
+### Changed
+- Broadened version tolerances for some dependencies.
+
 ## [0.5.17] - 2017-12-02
 ### Added
 - JS compiler subprocess
