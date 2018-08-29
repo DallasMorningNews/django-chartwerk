@@ -10,10 +10,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Broadened version tolerances for some dependencies.
 
+## [0.5.19] - 2018-02-14
+TK
+
+## [0.5.18] - 2018-01-02
+TK
+
 ## [0.5.17] - 2017-12-02
 ### Added
 - JS compiler subprocess
 - Example app in repo
+
+## [0.5.16] - 2017-10-13
+TK
 
 ## [0.5.15] - 2017-09-15
 ### Changed
@@ -42,6 +51,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Initial commit of pluggable Django app.
 
-[Unreleased]: https://github.com/DallasMorningNews/django-chartwerk/compare/v0.0.4...HEAD
-[0.0.4]: https://github.com/DallasMorningNews/django-chartwerk/compare/v0.0.3...v0.0.4
-[0.0.3]: https://github.com/DallasMorningNews/django-chartwerk/compare/v0.0.2...v0.0.3
+[Unreleased]: https://github.com/DallasMorningNews/django-chartwerk/compare/v0.5.19...HEAD
+[0.5.19]: https://github.com/DallasMorningNews/django-chartwerk/compare/v0.5.18...v0.5.19
+[0.5.18]: https://github.com/DallasMorningNews/django-chartwerk/compare/v0.5.17...v0.5.18
+[0.5.17]: https://github.com/DallasMorningNews/django-chartwerk/compare/v0.5.16...v0.5.17
+[0.5.16]: https://github.com/DallasMorningNews/django-chartwerk/compare/v0.5.15...v0.5.16
+[0.5.15]: https://github.com/DallasMorningNews/django-chartwerk/compare/v0.5.0...v0.5.15
+[0.5.0]: https://github.com/DallasMorningNews/django-chartwerk/compare/0.0.4...v0.5.0
+[0.0.4]: https://github.com/DallasMorningNews/django-chartwerk/compare/0.0.3...0.0.4
+[0.0.3]: https://github.com/DallasMorningNews/django-chartwerk/compare/0.0.2...0.0.3
