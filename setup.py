@@ -57,7 +57,6 @@ setup(
         'django-uuslug>=1.1.8',
         'djangorestframework>=2.4',
         'Pillow',
-        'psycopg2>=2.5',
         'PyGithub>=1.29',
         'slacker>=0.9',
     ],
