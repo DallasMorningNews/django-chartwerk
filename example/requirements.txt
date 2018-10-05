@@ -7,7 +7,7 @@ celery==4.1.0
 certifi==2017.11.5
 chardet==3.0.4
 decorator==4.1.2
-Django==2.0.2
+Django==2.0.8
 -e ./..
 django-uuslug==1.1.8
 djangorestframework==3.7.3
