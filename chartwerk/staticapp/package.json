@@ -37,7 +37,7 @@
     "gulp-util": "^3.0.7",
     "imagemin-jpeg-recompress": "^4.3.0",
     "isomorphic-fetch": "^2.2.1",
-    "jquery": "^3.0.0",
+    "jquery": "^3.5.0",
     "jshint": "^2.9.2",
     "jshint-stylish": "^2.1.0",
     "list.js": "^1.2.0",
